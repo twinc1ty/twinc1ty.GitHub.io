@@ -10,3 +10,11 @@
     }
   ]
 }
+      "name": "this.ssh",
+      "description": "this.ssh, a simple, pretty GUI SSH management tool built with NUXT & Rust",
+      "stars": 4,
+      "language": "Vue",
+      "url": "https://github.com/twinc1ty/this.ssh"
+    }
+  ]
+}
