@@ -11,7 +11,6 @@
   },
   "dependencies": {
     "@nuxt/content": "^3.7.1",
-    "@nuxthq/studio": "^2.2.1",
     "@tsparticles/slim": "^3.9.1",
     "@tsparticles/vue3": "^3.0.1",
     "@types/three": "^0.183.1",

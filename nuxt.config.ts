@@ -3,7 +3,6 @@ export default defineNuxtConfig({
     '@nuxt/content',
     '@nuxtjs/tailwindcss',
     '@nuxtjs/google-fonts',
-    '@nuxthq/studio',
   ],
 
   tailwindcss: {
