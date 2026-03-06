@@ -2,6 +2,14 @@
   "repos": [
     {
       "owner": "twinc1ty",
+      "name": "twinc1ty.GitHub.io",
+      "description": "Personal portfolio website built with Nuxt, Three.js, and GSAP",
+      "stars": 0,
+      "language": "Vue",
+      "url": "https://github.com/twinc1ty/twinc1ty.GitHub.io"
+    }
+  ]
+}
       "name": "this.ssh",
       "description": "this.ssh, a simple, pretty GUI SSH management tool built with NUXT & Rust",
       "stars": 4,

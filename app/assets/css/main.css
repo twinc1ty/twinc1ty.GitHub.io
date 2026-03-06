@@ -1,0 +1,111 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    background-color: #0c0c10;
+    color: #a9b1d6;
+    font-family: 'Space Grotesk', sans-serif;
+  }
+
+  ::selection {
+    background-color: rgba(122, 162, 247, 0.2);
+    color: #ffffff;
+  }
+
+  ::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background-color: #060608;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: #414868;
+    border-radius: 9999px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(122, 162, 247, 0.4);
+  }
+}
+
+@layer components {
+  .neon-text {
+    color: #7aa2f7;
+    text-shadow: 0 0 10px #7aa2f744;
+  }
+
+  .neon-text-secondary {
+    color: #9ece6a;
+    text-shadow: 0 0 10px #9ece6a44;
+  }
+
+  .neon-border {
+    border: 1px solid rgba(122, 162, 247, 0.15);
+    box-shadow: 0 0 8px #7aa2f711;
+  }
+
+  .neon-border:hover {
+    border-color: rgba(122, 162, 247, 0.35);
+    box-shadow: 0 0 12px #7aa2f722;
+  }
+
+  .section-heading {
+    @apply text-3xl md:text-4xl font-display font-bold tracking-wider uppercase;
+  }
+
+  .glass-panel {
+    background-color: rgba(22, 22, 30, 0.5);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    border-radius: 0.5rem;
+  }
+}
+
+/* Glitch effect */
+.glitch {
+  position: relative;
+}
+
+.glitch::before,
+.glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.glitch::before {
+  animation: glitch-1 4s infinite linear alternate-reverse;
+  clip-path: polygon(0 0, 100% 0, 100% 33%, 0 33%);
+  -webkit-text-stroke: 1px #7aa2f7;
+}
+
+.glitch::after {
+  animation: glitch-2 4s infinite linear alternate-reverse;
+  clip-path: polygon(0 67%, 100% 67%, 100% 100%, 0 100%);
+  -webkit-text-stroke: 1px #9ece6a;
+}
+
+@keyframes glitch-1 {
+  0%, 80% { transform: translate(0); }
+  82% { transform: translate(-2px, 2px); }
+  84% { transform: translate(-2px, -2px); }
+  86% { transform: translate(2px, 2px); }
+  88% { transform: translate(2px, -2px); }
+  90%, 100% { transform: translate(0); }
+}
+
+@keyframes glitch-2 {
+  0%, 85% { transform: translate(0); }
+  87% { transform: translate(2px, -1px); }
+  89% { transform: translate(2px, 1px); }
+  91% { transform: translate(-2px, -1px); }
+  93% { transform: translate(-2px, 1px); }
+  95%, 100% { transform: translate(0); }
+}
