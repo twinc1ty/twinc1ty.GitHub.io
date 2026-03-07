@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from 'vue'
-import * as THREE from 'three'
+import type * as THREETypes from 'three'
 
 const containerRef = ref<HTMLDivElement>()
-let renderer: THREE.WebGLRenderer
+let renderer: THREETypes.WebGLRenderer
 let animationId: number
 let mouseNX = 0.5, mouseNY = 0.5
 
@@ -12,8 +12,10 @@ function onMouseMove(e: MouseEvent) {
   mouseNY = e.clientY / window.innerHeight
 }
 
-onMounted(() => {
+onMounted(async () => {
   if (!containerRef.value) return
+
+  const THREE = await import('three')
 
   window.addEventListener('mousemove', onMouseMove)
 
