@@ -7,6 +7,14 @@
       "stars": 4,
       "language": "Vue",
       "url": "https://github.com/twinc1ty/this.ssh"
+    },
+    {
+      "owner": "twinc1ty",
+      "name": "CTRL",
+      "description": "CTRL is a secret management system. It covers the entire lifecycle of a secret: creation, storage, access control, rotation, and destruction — with a cryptographic audit trail at every step.",
+      "stars": 0,
+      "language": "HTML",
+      "url": "https://github.com/twinc1ty/CTRL"
     }
   ]
 }
