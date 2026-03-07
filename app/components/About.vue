@@ -11,8 +11,8 @@ onMounted(() => {
   gsap.from(sectionRef.value!, {
     scrollTrigger: {
       trigger: sectionRef.value!,
-      start: 'top 80%',
-      toggleActions: 'play none none reverse',
+      start: 'top 85%',
+      once: true,
     },
     opacity: 0,
     y: 40,
@@ -30,25 +30,47 @@ onMounted(() => {
         About
       </h2>
 
-      <div class="glass-panel p-8 space-y-4">
-        <p class="text-cyber-text-dim leading-relaxed">
-          Who am I?
-          An Artist. An Engineer
-        </p>
-        <p class="text-cyber-muted leading-relaxed">
-          When I'm not coding, I'm exploring new technologies, contributing to open source,
-          and writing about software engineering on my blog.
-        </p>
-
-        <div class="pt-4 flex flex-wrap gap-2">
-          <span
-            v-for="tech in ['TypeScript', 'Go', 'Python', 'Vue.js', 'Nuxt', 'Node.js', 'Docker', 'Kubernetes', 'AWS']"
-            :key="tech"
-            class="px-3 py-1 text-xs font-mono text-cyber-accent/80 bg-cyber-accent/5 border border-cyber-accent/10 rounded"
-          >
-            {{ tech }}
-          </span>
+      <div class="cyber-folder">
+        <div class="folder-tab">
+          <span class="font-mono text-[10px] text-cyber-accent/70 tracking-widest">SYS://PROFILE</span>
         </div>
+
+        <div class="folder-body">
+          <div class="scanline-overlay" />
+
+          <div class="flex items-center gap-2 mb-5">
+            <div class="w-2 h-2 rounded-full bg-cyber-accent/50" />
+            <div class="w-2 h-2 rounded-full bg-cyber-secondary/40" />
+            <div class="w-2 h-2 rounded-full bg-cyber-subtle/40" />
+            <span class="ml-2 text-[10px] font-mono text-cyber-subtle/60 tracking-wider">twinc1ty@portfolio ~ cat about.md</span>
+          </div>
+
+          <div class="space-y-4 pl-4 border-l-2 border-cyber-accent/10">
+            <p class="text-cyber-text-dim leading-relaxed font-sans">
+              Who am I?
+              An Artist. An Engineer.
+            </p>
+            <p class="text-cyber-muted leading-relaxed font-sans">
+              When I'm not coding, I'm exploring new technologies, contributing to open source,
+              and writing about software engineering on my blog.
+            </p>
+          </div>
+
+          <div class="h-px bg-gradient-to-r from-cyber-accent/20 via-cyber-accent/5 to-transparent my-5" />
+
+          <div class="flex flex-wrap gap-2">
+            <span
+              v-for="tech in ['TypeScript', 'Go', 'Python', 'Vue.js', 'Nuxt', 'Node.js', 'Docker', 'Kubernetes', 'AWS']"
+              :key="tech"
+              class="cyber-chip"
+            >
+              {{ tech }}
+            </span>
+          </div>
+        </div>
+
+        <div class="corner-accent top-left" />
+        <div class="corner-accent bottom-right" />
       </div>
     </div>
   </section>

@@ -31,7 +31,7 @@ function formatDate(dateStr: string) {
       </NuxtLink>
 
       <header class="mb-12">
-        <h1 class="text-3xl md:text-5xl font-display font-bold text-cyber-text mb-4">
+        <h1 class="text-3xl md:text-5xl font-bold text-cyber-text mb-4" style="font-family: 'Inter', 'Space Grotesk', sans-serif;">
           {{ post.title }}
         </h1>
         <div class="flex items-center gap-4 text-sm text-cyber-subtle font-mono">
@@ -64,51 +64,165 @@ function formatDate(dateStr: string) {
 
 <style>
 .blog-content {
-  @apply text-cyber-text-dim font-sans;
-  line-height: 1.8;
+  font-family: 'Inter', 'Space Grotesk', sans-serif;
+  color: #a9b1d6;
+  line-height: 1.85;
+  font-size: 1.05rem;
 }
-.blog-content h1, .blog-content h2, .blog-content h3, .blog-content h4 {
-  @apply text-cyber-text font-display tracking-wider uppercase;
+
+/* Headings */
+.blog-content h1,
+.blog-content h2,
+.blog-content h3,
+.blog-content h4 {
+  font-family: 'Inter', 'Space Grotesk', sans-serif;
+  color: #c0caf5;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.35;
 }
+
 .blog-content h2 {
-  @apply text-2xl mt-10 mb-4;
+  font-size: 1.65rem;
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(122, 162, 247, 0.1);
   color: #7aa2f7;
-  text-shadow: 0 0 10px #7aa2f744;
 }
+
 .blog-content h3 {
-  @apply text-xl mt-8 mb-3;
+  font-size: 1.3rem;
+  margin-top: 2.25rem;
+  margin-bottom: 0.75rem;
+  color: #c0caf5;
 }
+
+.blog-content h4 {
+  font-size: 1.1rem;
+  margin-top: 1.75rem;
+  margin-bottom: 0.5rem;
+  color: #9aa5ce;
+}
+
+/* Paragraphs */
 .blog-content p {
-  @apply text-cyber-text-dim leading-relaxed mb-4 font-sans;
+  margin-bottom: 1.25rem;
+  color: #a9b1d6;
+  line-height: 1.85;
 }
+
+/* Links */
 .blog-content a {
-  @apply text-cyber-accent hover:underline;
+  color: #7aa2f7;
+  text-decoration: underline;
+  text-decoration-color: rgba(122, 162, 247, 0.3);
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+  transition: text-decoration-color 0.2s ease, color 0.2s ease;
 }
+
+.blog-content a:hover {
+  color: #89b4fa;
+  text-decoration-color: rgba(122, 162, 247, 0.8);
+}
+
+/* Inline code */
 .blog-content code {
-  @apply bg-cyber-surface px-1.5 py-0.5 rounded text-sm font-mono text-cyber-accent;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.85em;
+  color: #7aa2f7;
+  background: rgba(122, 162, 247, 0.08);
+  border: 1px solid rgba(122, 162, 247, 0.1);
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
 }
+
+/* Code blocks */
 .blog-content pre {
-  @apply bg-cyber-darker border border-cyber-accent/10 rounded-lg p-4 overflow-x-auto;
+  background: #0a0a0f !important;
+  border: 1px solid rgba(122, 162, 247, 0.12);
+  border-radius: 8px;
+  padding: 1.25rem 1.5rem;
+  margin: 1.5rem 0;
+  overflow-x: auto;
+  font-size: 0.875rem;
+  line-height: 1.7;
 }
+
 .blog-content pre code {
-  @apply bg-transparent p-0;
+  background: transparent !important;
+  border: none;
+  padding: 0;
+  font-size: inherit;
+  color: #a9b1d6;
 }
-.blog-content ul, .blog-content ol {
-  @apply pl-6 mb-4 space-y-1;
+
+/* Lists */
+.blog-content ul,
+.blog-content ol {
+  padding-left: 1.5rem;
+  margin-bottom: 1.25rem;
 }
+
+.blog-content ul {
+  list-style-type: disc;
+}
+
+.blog-content ol {
+  list-style-type: decimal;
+}
+
 .blog-content li {
-  @apply text-cyber-text-dim;
+  color: #a9b1d6;
+  margin-bottom: 0.4rem;
+  line-height: 1.75;
+  padding-left: 0.25rem;
 }
+
 .blog-content li::marker {
-  @apply text-cyber-accent;
+  color: #7aa2f7;
 }
+
+/* Blockquotes */
 .blog-content blockquote {
-  @apply border-l-2 border-cyber-accent/20 pl-4 italic text-cyber-muted;
+  border-left: 3px solid rgba(122, 162, 247, 0.3);
+  padding: 0.75rem 1.25rem;
+  margin: 1.5rem 0;
+  background: rgba(122, 162, 247, 0.03);
+  border-radius: 0 6px 6px 0;
 }
+
+.blog-content blockquote p {
+  color: #9aa5ce;
+  font-style: italic;
+  margin-bottom: 0;
+}
+
+/* Images */
 .blog-content img {
-  @apply rounded-lg border border-cyber-accent/10;
+  border-radius: 8px;
+  border: 1px solid rgba(122, 162, 247, 0.1);
+  margin: 1.5rem 0;
+  max-width: 100%;
 }
+
+/* Horizontal rule */
 .blog-content hr {
-  @apply border-cyber-subtle my-8;
+  border: none;
+  height: 1px;
+  background: linear-gradient(to right, rgba(122, 162, 247, 0.2), rgba(122, 162, 247, 0.05), transparent);
+  margin: 2.5rem 0;
+}
+
+/* Strong / Bold */
+.blog-content strong {
+  color: #c0caf5;
+  font-weight: 600;
+}
+
+/* Emphasis */
+.blog-content em {
+  color: #9aa5ce;
 }
 </style>

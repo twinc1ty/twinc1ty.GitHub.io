@@ -26,10 +26,13 @@ onMounted(() => {
   if (cardsRef.value) {
     gsap.from(cardsRef.value.children, {
       opacity: 0,
-      y: 30,
-      stagger: 0.1,
-      duration: 0.6,
+      y: 50,
+      scale: 0.92,
+      rotateX: 8,
+      stagger: 0.12,
+      duration: 0.7,
       ease: 'power3.out',
+      clearProps: 'transform',
     })
   }
 })
@@ -38,20 +41,22 @@ onMounted(() => {
 <template>
   <div class="pt-24 pb-16 px-6 min-h-screen">
     <div class="max-w-6xl mx-auto">
-      <h1 class="section-heading neon-text mb-12">Projects</h1>
+      <h1 class="section-heading neon-text mb-12">/constructs</h1>
 
       <div
         ref="cardsRef"
         class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+        style="perspective: 1000px"
       >
         <ProjectCard
-          v-for="repo in repos"
+          v-for="(repo, i) in repos"
           :key="repo.name"
           :name="repo.name"
           :description="repo.description"
           :stars="repo.stars"
           :language="repo.language"
           :url="repo.url"
+          :index="i"
         />
       </div>
 

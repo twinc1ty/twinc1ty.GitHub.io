@@ -14,8 +14,19 @@ export default defineNuxtConfig({
       'Orbitron': [400, 500, 600, 700, 800, 900],
       'Space Mono': [400, 700],
       'Space Grotesk': [300, 400, 500, 600, 700],
+      'Inter': [400, 500, 600, 700],
     },
     display: 'swap',
+  },
+
+  content: {
+    build: {
+      markdown: {
+        highlight: {
+          theme: 'tokyo-night',
+        },
+      },
+    },
   },
 
   app: {

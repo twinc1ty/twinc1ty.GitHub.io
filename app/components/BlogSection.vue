@@ -6,6 +6,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 gsap.registerPlugin(ScrollTrigger)
 
 const sectionRef = ref<HTMLElement>()
+const cardsRef = ref<HTMLElement>()
 
 const { data: posts } = await useAsyncData('blog-preview', () =>
   queryCollection('blog')
@@ -27,6 +28,24 @@ onMounted(() => {
     duration: 0.8,
     ease: 'power3.out',
   })
+
+  if (cardsRef.value) {
+    gsap.from(cardsRef.value.children, {
+      scrollTrigger: {
+        trigger: cardsRef.value,
+        start: 'top 85%',
+        toggleActions: 'play none none reverse',
+      },
+      opacity: 0,
+      y: 50,
+      scale: 0.92,
+      rotateX: 8,
+      stagger: 0.12,
+      duration: 0.7,
+      ease: 'power3.out',
+      clearProps: 'transform',
+    })
+  }
 })
 </script>
 
@@ -46,15 +65,20 @@ onMounted(() => {
         </NuxtLink>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div
+        ref="cardsRef"
+        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+        style="perspective: 1000px"
+      >
         <BlogCard
-          v-for="post in posts"
+          v-for="(post, i) in posts"
           :key="post.path"
           :title="post.title"
           :description="post.description"
           :date="post.date"
           :tags="post.tags"
           :slug="post.path?.replace('/blog/', '') || ''"
+          :index="i"
         />
       </div>
 

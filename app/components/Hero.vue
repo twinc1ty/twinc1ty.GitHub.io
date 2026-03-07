@@ -43,10 +43,6 @@ onMounted(() => {
     ref="heroRef"
     class="relative min-h-screen flex items-center justify-center overflow-hidden"
   >
-    <ClientOnly>
-      <ThreeScene />
-    </ClientOnly>
-
     <div class="relative z-10 text-center px-6">
       <div ref="lineRef" class="w-16 h-px bg-cyber-accent/40 mx-auto mb-6 origin-left" />
 

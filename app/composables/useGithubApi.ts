@@ -21,6 +21,14 @@ interface ProjectRepo {
   url: string
 }
 
+function toBase64(str: string): string {
+  return btoa(unescape(encodeURIComponent(str)))
+}
+
+function fromBase64(b64: string): string {
+  return decodeURIComponent(escape(atob(b64)))
+}
+
 export function useGithubApi() {
   const { token } = useGithubAuth()
 
@@ -63,7 +71,7 @@ export function useGithubApi() {
 
     const data = await res.json()
     try {
-      const content = JSON.parse(atob(data.content))
+      const content = JSON.parse(fromBase64(data.content))
       return { repos: content.repos || [], sha: data.sha }
     } catch {
       // Malformed JSON in projects.json — treat as empty
@@ -72,7 +80,7 @@ export function useGithubApi() {
   }
 
   async function commitProjectsJson(repos: ProjectRepo[], sha: string): Promise<boolean> {
-    const content = btoa(JSON.stringify({ repos }, null, 2))
+    const content = toBase64(JSON.stringify({ repos }, null, 2))
 
     const res = await fetch(
       `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${PROJECTS_PATH}`,

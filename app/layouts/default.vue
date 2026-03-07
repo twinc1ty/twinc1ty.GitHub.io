@@ -5,6 +5,6 @@
     <main class="relative z-10">
       <slot />
     </main>
-    <Footer />
+    <!-- <Footer /> -->
   </div>
 </template>

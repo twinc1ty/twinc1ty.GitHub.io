@@ -1,38 +1,43 @@
 <script setup lang="ts">
 const links = [
   // { label: 'Home', href: '/' },
-  { label: 'About', href: '/about' },
-  { label: 'Projects', href: '/projects' },
-  { label: 'Blog', href: '/blog' },
-  { label: 'Contact', href: '/contact' },
-]
+  { label: "/identity", href: "/about" },
+  { label: "/constructs", href: "/projects" },
+  { label: "/logs", href: "/blog" },
+  { label: "/signal", href: "/contact" },
+];
 
-const isScrolled = ref(false)
-const mobileOpen = ref(false)
+const isScrolled = ref(false);
+const mobileOpen = ref(false);
 
 function onScroll() {
-  isScrolled.value = window.scrollY > 50
+  isScrolled.value = window.scrollY > 50;
 }
 
 onMounted(() => {
-  window.addEventListener('scroll', onScroll, { passive: true })
-})
+  window.addEventListener("scroll", onScroll, { passive: true });
+});
 
 onUnmounted(() => {
-  window.removeEventListener('scroll', onScroll)
-})
+  window.removeEventListener("scroll", onScroll);
+});
 </script>
 
 <template>
   <nav
     :class="[
       'fixed top-0 left-0 right-0 z-50 transition-all duration-300 font-mono',
-      isScrolled ? 'bg-cyber-dark/90 backdrop-blur-md border-b border-cyber-accent/5' : 'bg-transparent',
+      isScrolled
+        ? 'bg-cyber-dark/90 backdrop-blur-md border-b border-cyber-accent/5'
+        : 'bg-transparent',
     ]"
   >
     <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-      <NuxtLink to="/" class="text-lg font-display font-bold neon-text tracking-widest uppercase">
-        Anirudh Rath
+      <NuxtLink
+        to="/"
+        class="text-lg font-display font-bold neon-text tracking-widest uppercase"
+      >
+        portfolio.sys
       </NuxtLink>
 
       <!-- Desktop nav -->
@@ -44,7 +49,9 @@ onUnmounted(() => {
           class="text-xs text-cyber-muted hover:text-cyber-accent transition-colors duration-300 relative group font-mono tracking-wider uppercase"
         >
           {{ link.label }}
-          <span class="absolute -bottom-1 left-0 w-0 h-px bg-cyber-accent/50 transition-all duration-300 group-hover:w-full" />
+          <span
+            class="absolute -bottom-1 left-0 w-0 h-px bg-cyber-accent/50 transition-all duration-300 group-hover:w-full"
+          />
         </NuxtLink>
       </div>
 
@@ -53,7 +60,12 @@ onUnmounted(() => {
         class="md:hidden text-cyber-muted hover:text-cyber-accent"
         @click="mobileOpen = !mobileOpen"
       >
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg
+          class="w-6 h-6"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
           <path
             v-if="!mobileOpen"
             stroke-linecap="round"

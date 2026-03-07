@@ -109,3 +109,148 @@
   93% { transform: translate(-2px, 1px); }
   95%, 100% { transform: translate(0); }
 }
+
+/* Cyberpunk folder cards */
+.cyber-folder {
+  position: relative;
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.cyber-folder:hover {
+  transform: translateY(-4px);
+  filter: brightness(1.05);
+}
+
+.folder-tab {
+  position: relative;
+  display: inline-block;
+  background: linear-gradient(135deg, rgba(122, 162, 247, 0.08), rgba(22, 22, 30, 0.8));
+  border: 1px solid rgba(122, 162, 247, 0.12);
+  border-bottom: none;
+  border-radius: 4px 4px 0 0;
+  padding: 4px 14px;
+  margin-left: 12px;
+}
+
+.folder-body {
+  position: relative;
+  background: linear-gradient(160deg, rgba(22, 22, 30, 0.7) 0%, rgba(12, 12, 16, 0.9) 100%);
+  border: 1px solid rgba(122, 162, 247, 0.1);
+  border-radius: 0 6px 6px 6px;
+  padding: 1.25rem;
+  backdrop-filter: blur(8px);
+  overflow: hidden;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.cyber-folder:hover .folder-body {
+  border-color: rgba(122, 162, 247, 0.3);
+  box-shadow: 0 0 20px rgba(122, 162, 247, 0.06), inset 0 0 30px rgba(122, 162, 247, 0.02);
+}
+
+.scanline-overlay {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(122, 162, 247, 0.015) 2px,
+    rgba(122, 162, 247, 0.015) 4px
+  );
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.cyber-folder:hover .scanline-overlay {
+  opacity: 1;
+}
+
+.corner-accent {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.cyber-folder:hover .corner-accent {
+  opacity: 1;
+}
+
+.corner-accent.top-left {
+  top: 0;
+  left: 0;
+  border-top: 1px solid rgba(122, 162, 247, 0.5);
+  border-left: 1px solid rgba(122, 162, 247, 0.5);
+}
+
+.corner-accent.bottom-right {
+  bottom: 0;
+  right: 0;
+  border-bottom: 1px solid rgba(122, 162, 247, 0.5);
+  border-right: 1px solid rgba(122, 162, 247, 0.5);
+}
+
+/* Cyberpunk tech chips */
+.cyber-chip {
+  padding: 4px 12px;
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  color: rgba(122, 162, 247, 0.7);
+  background: linear-gradient(135deg, rgba(122, 162, 247, 0.06), rgba(122, 162, 247, 0.02));
+  border: 1px solid rgba(122, 162, 247, 0.1);
+  border-radius: 2px;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.cyber-chip:hover {
+  color: rgba(122, 162, 247, 0.9);
+  border-color: rgba(122, 162, 247, 0.3);
+  box-shadow: 0 0 10px rgba(122, 162, 247, 0.08);
+}
+
+/* Cyberpunk contact chips */
+.contact-chip {
+  position: relative;
+  padding: 12px 24px;
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(122, 162, 247, 0.7);
+  background: linear-gradient(160deg, rgba(22, 22, 30, 0.7), rgba(12, 12, 16, 0.9));
+  border: 1px solid rgba(122, 162, 247, 0.12);
+  border-radius: 2px;
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.contact-chip::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(122, 162, 247, 0.015) 2px,
+    rgba(122, 162, 247, 0.015) 4px
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.contact-chip:hover::before {
+  opacity: 1;
+}
+
+.contact-chip:hover {
+  color: rgba(122, 162, 247, 0.95);
+  border-color: rgba(122, 162, 247, 0.35);
+  box-shadow: 0 0 20px rgba(122, 162, 247, 0.08), inset 0 0 20px rgba(122, 162, 247, 0.02);
+  transform: translateY(-2px);
+}
