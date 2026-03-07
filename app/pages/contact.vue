@@ -47,7 +47,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="pt-24 pb-16 px-6 min-h-screen">
+  <div class="pt-16 pb-16 px-6 min-h-screen">
     <div class="max-w-4xl mx-auto text-center">
       <h1 ref="headingRef" class="section-heading neon-text mb-6">/signal</h1>
 

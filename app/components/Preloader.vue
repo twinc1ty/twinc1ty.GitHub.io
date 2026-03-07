@@ -9,6 +9,10 @@ const lineRef = ref<HTMLElement>()
 const counterRef = ref<HTMLElement>()
 
 const progress = ref(0)
+const readyToDismiss = ref(false)
+const enterRef = ref<HTMLElement>()
+
+const { init: initAudio } = useAudio()
 
 onMounted(() => {
   const start = performance.now()
@@ -43,14 +47,32 @@ onMounted(() => {
     },
   }, 0.2)
 
-  // Wait for fonts + minimum time
+  // Wait for fonts + minimum time, then show "click to enter"
   const ready = document.fonts ? document.fonts.ready : Promise.resolve()
   ready.then(() => {
     const elapsed = performance.now() - start
     const remaining = Math.max(0, minVisible - elapsed)
-    setTimeout(dismiss, remaining)
+    setTimeout(() => {
+      readyToDismiss.value = true
+      if (counterRef.value) counterRef.value.style.display = 'none'
+      nextTick(() => {
+        if (enterRef.value) {
+          gsap.fromTo(enterRef.value, { opacity: 0 }, {
+            opacity: 1,
+            duration: 0.6,
+            ease: 'power2.out',
+          })
+        }
+      })
+    }, remaining)
   })
 })
+
+function onEnterClick() {
+  if (!readyToDismiss.value) return
+  initAudio()
+  dismiss()
+}
 
 function dismiss() {
   if (!preloaderRef.value || !contentRef.value) return
@@ -82,7 +104,7 @@ function dismiss() {
 </script>
 
 <template>
-  <div v-if="visible" ref="preloaderRef" class="fixed inset-0 z-[9999]">
+  <div v-if="visible" ref="preloaderRef" class="fixed inset-0 z-[9999]" @click="onEnterClick">
     <!-- Split panels -->
     <div class="preloader-top absolute inset-x-0 top-0 h-1/2 bg-cyber-dark" />
     <div class="preloader-bottom absolute inset-x-0 bottom-0 h-1/2 bg-cyber-dark" />
@@ -107,6 +129,15 @@ function dismiss() {
         <!-- Progress counter -->
         <p ref="counterRef" class="font-mono text-xs text-cyber-muted mt-4 tracking-[0.5em]">
           0%
+        </p>
+
+        <!-- Click to enter -->
+        <p
+          v-if="readyToDismiss"
+          ref="enterRef"
+          class="font-mono text-[10px] text-cyber-accent/60 mt-6 tracking-[0.4em] uppercase cursor-pointer animate-pulse"
+        >
+          [ click to enter ]
         </p>
       </div>
     </div>

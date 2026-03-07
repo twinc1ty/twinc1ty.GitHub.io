@@ -21,7 +21,7 @@ function formatDate(dateStr: string) {
 </script>
 
 <template>
-  <div class="pt-24 pb-16 px-6 min-h-screen">
+  <div class="pt-16 pb-16 px-6 min-h-screen">
     <article v-if="post" class="max-w-3xl mx-auto">
       <NuxtLink
         to="/blog"
