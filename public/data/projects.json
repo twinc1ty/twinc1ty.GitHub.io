@@ -15,6 +15,46 @@
       "stars": 0,
       "language": "HTML",
       "url": "https://github.com/twinc1ty/CTRL"
+    },
+    {
+      "owner": "twinc1ty",
+      "name": "useNetFlux",
+      "description": "A JS/TS utility composable for network calls, logging and granular control over it all. Under active development. ",
+      "stars": 2,
+      "language": "TypeScript",
+      "url": "https://github.com/twinc1ty/useNetFlux"
+    },
+    {
+      "owner": "twinc1ty",
+      "name": "twinc1ty.GitHub.io",
+      "description": "Repository of my Portfolio Website",
+      "stars": 3,
+      "language": "Vue",
+      "url": "https://github.com/twinc1ty/twinc1ty.GitHub.io"
+    },
+    {
+      "owner": "twinc1ty",
+      "name": "ElementJS",
+      "description": "Light Weight Physics Engine for the Web in JavaScript",
+      "stars": 3,
+      "language": "JavaScript",
+      "url": "https://github.com/twinc1ty/ElementJS"
+    },
+    {
+      "owner": "twinc1ty",
+      "name": "Battleship-Client",
+      "description": "Battleship game client. Made it because no one would play the board game with me so I made a computer game hoping people on the internet will validate this. Also to learn Go. Copied the same description from the server repo btw",
+      "stars": 0,
+      "language": "Go",
+      "url": "https://github.com/twinc1ty/Battleship-Client"
+    },
+    {
+      "owner": "twinc1ty",
+      "name": "Battleship-Server",
+      "description": "Battleship game server and engine. Made it because no one would play the board game with me so I made a computer game hoping people on the internet will validate this. Also to learn Go.",
+      "stars": 0,
+      "language": "Go",
+      "url": "https://github.com/twinc1ty/Battleship-Server"
     }
   ]
 }
