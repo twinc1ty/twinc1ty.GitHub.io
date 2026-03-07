@@ -41,8 +41,8 @@ onMounted(() => {
           kid, trying to play video games. I'm a startup enthusiast because I
           admire, cherish and absolutely dig the learning curve that startups
           have to offer. 
-          
-          <p class="text-cyber-muted leading-relaxed font-sans">
+        </p>
+        <p class="text-cyber-muted leading-relaxed font-sans">
           Over the years I have worked on and delivered multiple
           projects as a freelance developer and an engineer. Strong technology
           and system design professional with a major in Computer Science. 
@@ -55,10 +55,9 @@ onMounted(() => {
           Three Body Problem by Cixin Liu and the Foundation series by Isaac
           Asimov. 
           </p>
-          <p>
+          <p class="text-cyber-muted leading-relaxed font-sans">
           I want to be a better version of myself and a good human
           being.</p>
-        </p>
         <div class="pt-4 flex flex-wrap gap-2">
           <span
             v-for="tech in [

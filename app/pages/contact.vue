@@ -33,7 +33,7 @@ onMounted(() => {
       <h1 class="section-heading neon-text mb-6">Contact</h1>
 
       <p class="text-cyber-muted mb-10 max-w-lg mx-auto font-sans">
-        Have a project in mind or just want to chat? Feel free to reach out.
+        Let's work on your next big project together. Reach out to me via any of the platforms below. 
       </p>
 
       <div class="flex flex-wrap items-center justify-center gap-4">
