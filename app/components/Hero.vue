@@ -52,7 +52,7 @@ onMounted(() => {
 
       <h1
         ref="nameRef"
-        class="text-5xl md:text-8xl font-display font-black mb-4 glitch tracking-widest uppercase"
+        class="text-2xl md:text-3xl font-display font-black mb-4 glitch tracking-widest uppercase"
         data-text="twinc1ty"
       >
         <span class="neon-text">twinc1ty</span>
@@ -62,7 +62,7 @@ onMounted(() => {
         ref="taglineRef"
         class="text-sm md:text-base text-cyber-muted font-mono max-w-md mx-auto uppercase"
       >
-        Engineering. System Design. Literature.
+        Engineering, Art & Literature
       </p>
     </div>
   </section>

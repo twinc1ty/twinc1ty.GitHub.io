@@ -62,8 +62,13 @@ export function useGithubApi() {
     }
 
     const data = await res.json()
-    const content = JSON.parse(atob(data.content))
-    return { repos: content.repos, sha: data.sha }
+    try {
+      const content = JSON.parse(atob(data.content))
+      return { repos: content.repos || [], sha: data.sha }
+    } catch {
+      // Malformed JSON in projects.json — treat as empty
+      return { repos: [], sha: data.sha }
+    }
   }
 
   async function commitProjectsJson(repos: ProjectRepo[], sha: string): Promise<boolean> {

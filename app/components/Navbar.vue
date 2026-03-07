@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const links = [
-  { label: 'Home', href: '/' },
+  // { label: 'Home', href: '/' },
   { label: 'About', href: '/about' },
   { label: 'Projects', href: '/projects' },
   { label: 'Blog', href: '/blog' },
@@ -32,7 +32,7 @@ onUnmounted(() => {
   >
     <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
       <NuxtLink to="/" class="text-lg font-display font-bold neon-text tracking-widest uppercase">
-        twinc1ty
+        Anirudh Rath
       </NuxtLink>
 
       <!-- Desktop nav -->

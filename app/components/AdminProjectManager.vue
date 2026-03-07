@@ -26,6 +26,7 @@ const loading = ref(true)
 const saving = ref(false)
 const searchQuery = ref('')
 const saveStatus = ref<'idle' | 'success' | 'error'>('idle')
+const loadError = ref('')
 
 const filteredRepos = computed(() => {
   const q = searchQuery.value.toLowerCase()
@@ -38,16 +39,27 @@ const filteredRepos = computed(() => {
 
 async function load() {
   loading.value = true
+  loadError.value = ''
   try {
-    const [repos, projects] = await Promise.all([
+    const [repos, projects] = await Promise.allSettled([
       fetchUserRepos(),
       getProjectsJson(),
     ])
-    allRepos.value = repos
-    selectedRepos.value = projects.repos
-    fileSha.value = projects.sha
+    if (repos.status === 'fulfilled') {
+      allRepos.value = repos.value
+      if (!repos.value.length) {
+        loadError.value = 'No repos returned. Check that your token has the "repo" scope.'
+      }
+    } else {
+      loadError.value = `Failed to fetch repos: ${repos.reason}`
+    }
+    if (projects.status === 'fulfilled') {
+      selectedRepos.value = projects.value.repos
+      fileSha.value = projects.value.sha
+    }
   } catch (e) {
     console.error('Failed to load data:', e)
+    loadError.value = `Failed to load: ${e instanceof Error ? e.message : String(e)}`
   }
   loading.value = false
 }
@@ -211,8 +223,11 @@ onMounted(load)
           </div>
         </div>
 
-        <p v-if="!filteredRepos.length" class="text-cyber-subtle text-sm font-mono py-4 text-center">
-          {{ searchQuery ? 'No matching repos found.' : 'All repos are already selected.' }}
+        <p v-if="loadError" class="text-red-400 text-sm font-mono py-4 text-center">
+          {{ loadError }}
+        </p>
+        <p v-else-if="!filteredRepos.length" class="text-cyber-subtle text-sm font-mono py-4 text-center">
+          {{ searchQuery ? 'No matching repos found.' : allRepos.length ? 'All repos are already selected.' : 'No repos loaded.' }}
         </p>
       </div>
     </div>
