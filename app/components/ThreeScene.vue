@@ -10,7 +10,7 @@ const containerRef = ref<HTMLDivElement>()
 let renderer: THREETypes.WebGLRenderer
 let animationId: number
 
-const { nx, ny } = useInputDirection()
+const { nx, ny, isMobile } = useInputDirection()
 
 onMounted(async () => {
   if (!containerRef.value) return
@@ -117,25 +117,31 @@ onMounted(async () => {
   const lines = new THREE.LineSegments(lineGeometry, lineMaterial)
   scene.add(lines)
 
-  const ringGeometry = new THREE.TorusGeometry(3.2, 0.004, 8, 140)
-  const ringMaterial = new THREE.MeshBasicMaterial({
-    color: 0x565f89,
-    transparent: true,
-    opacity: 0.3,
-  })
-  const ring = new THREE.Mesh(ringGeometry, ringMaterial)
-  ring.rotation.x = Math.PI / 2
-  scene.add(ring)
+  // Rings (desktop only)
+  let ring: InstanceType<typeof THREE.Mesh> | null = null
+  let ring2: InstanceType<typeof THREE.Mesh> | null = null
+  let ringMaterial: InstanceType<typeof THREE.MeshBasicMaterial> | null = null
+  let ring2Material: InstanceType<typeof THREE.MeshBasicMaterial> | null = null
 
-  const ring2Geometry = new THREE.TorusGeometry(2.2, 0.003, 8, 100)
-  const ring2Material = new THREE.MeshBasicMaterial({
-    color: 0x414868,
-    transparent: true,
-    opacity: 0.15,
-  })
-  const ring2 = new THREE.Mesh(ring2Geometry, ring2Material)
-  ring2.rotation.x = Math.PI / 2
-  scene.add(ring2)
+  if (!isMobile.value) {
+    ringMaterial = new THREE.MeshBasicMaterial({
+      color: 0x565f89,
+      transparent: true,
+      opacity: 0.3,
+    })
+    ring = new THREE.Mesh(new THREE.TorusGeometry(3.2, 0.004, 8, 140), ringMaterial)
+    ring.rotation.x = Math.PI / 2
+    scene.add(ring)
+
+    ring2Material = new THREE.MeshBasicMaterial({
+      color: 0x414868,
+      transparent: true,
+      opacity: 0.15,
+    })
+    ring2 = new THREE.Mesh(new THREE.TorusGeometry(2.2, 0.003, 8, 100), ring2Material)
+    ring2.rotation.x = Math.PI / 2
+    scene.add(ring2)
+  }
 
   let time = 0
   let currentRotX = 0, currentRotY = 0
@@ -177,15 +183,17 @@ onMounted(async () => {
     pointsMaterial.opacity = 0.65 + pulse * 0.35
     lineMaterial.opacity = 0.09 + pulse * 0.15
 
-    ringMaterial.opacity = 0.3 + pulse * 0.4
-    ring2Material.opacity = 0.15 + pulse * 0.3
-    ring.scale.setScalar(1 + pulse * 0.08)
-    ring2.scale.setScalar(1 + pulse * 0.06)
+    if (ring && ring2 && ringMaterial && ring2Material) {
+      ringMaterial.opacity = 0.3 + pulse * 0.4
+      ring2Material.opacity = 0.15 + pulse * 0.3
+      ring.scale.setScalar(1 + pulse * 0.08)
+      ring2.scale.setScalar(1 + pulse * 0.06)
 
-    ring.rotation.x = Math.PI / 2 + Math.sin(time * 0.12) * 0.12
-    ring.rotation.z = time * 0.03
-    ring2.rotation.x = Math.PI / 2 - Math.sin(time * 0.1) * 0.08
-    ring2.rotation.z = -time * 0.05
+      ring.rotation.x = Math.PI / 2 + Math.sin(time * 0.12) * 0.12
+      ring.rotation.z = time * 0.03
+      ring2.rotation.x = Math.PI / 2 - Math.sin(time * 0.1) * 0.08
+      ring2.rotation.z = -time * 0.05
+    }
 
     const posArray = pointsGeometry.attributes.position!.array as Float32Array
     for (let i = 0; i < pointCount; i++) {
