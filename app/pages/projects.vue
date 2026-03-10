@@ -3,7 +3,7 @@ import gsap from 'gsap'
 
 useSeoMeta({
   title: 'Projects | twinc1ty',
-  description: 'Open source projects and repositories',
+  description: 'Projects and repositories',
 })
 
 interface Repo {

@@ -1,5 +1,6 @@
 const REPO_OWNER = 'twinc1ty'
-const REPO_NAME = 'twinc1ty.GitHub.io' // Update if repo is renamed
+// todo: Update after repo is renamed
+const REPO_NAME = 'twinc1ty.GitHub.io' 
 const PROJECTS_PATH = 'public/data/projects.json'
 
 interface GitHubRepo {
@@ -74,7 +75,7 @@ export function useGithubApi() {
       const content = JSON.parse(fromBase64(data.content))
       return { repos: content.repos || [], sha: data.sha }
     } catch {
-      // Malformed JSON in projects.json — treat as empty
+      // Malformed JSON in projects.json treating as empty
       return { repos: [], sha: data.sha }
     }
   }

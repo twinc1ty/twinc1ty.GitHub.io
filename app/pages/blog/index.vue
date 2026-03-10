@@ -3,7 +3,7 @@ import gsap from 'gsap'
 
 useSeoMeta({
   title: 'Blog | twinc1ty',
-  description: 'Thoughts on software engineering, architecture, and tech',
+  description: 'Documenting my journey as an Engineer',
 })
 
 const cardsRef = ref<HTMLElement>()

@@ -1,4 +1,5 @@
-const GITHUB_CLIENT_ID = 'YOUR_GITHUB_CLIENT_ID' // Replace with your GitHub OAuth App client ID
+// todo: Move client ID to env variable and update in GitHub OAuth app settings and update with actual client id
+const GITHUB_CLIENT_ID = 'GITHUB_CLIENT_ID' 
 const TOKEN_KEY = 'gh_token'
 const USER_KEY = 'gh_user'
 
@@ -44,12 +45,6 @@ export function useGithubAuth() {
   }
 
   function loginWithDeviceFlow() {
-    // GitHub OAuth Device Flow:
-    // 1. POST https://github.com/login/device/code with client_id and scope
-    // 2. Show user the user_code and direct them to verification_uri
-    // 3. Poll POST https://github.com/login/oauth/access_token with device_code
-    //
-    // For simplicity, we use the web application flow redirect:
     const scopes = 'repo'
     const redirectUri = `${window.location.origin}/admin`
     window.location.href = `https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}&scope=${scopes}&redirect_uri=${encodeURIComponent(redirectUri)}`

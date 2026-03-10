@@ -1,3 +1,5 @@
+// snap funtion was aided by claude
+
 <script setup lang="ts">
 import gsap from 'gsap'
 

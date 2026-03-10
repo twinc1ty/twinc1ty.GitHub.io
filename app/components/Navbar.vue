@@ -14,15 +14,20 @@ const isHome = computed(() => route.path === '/')
 
     <NuxtLink
       to="/"
-      class="fixed top-6 right-6 z-[60] group flex items-center gap-3"
+      class="fixed top-6 right-6 z-[60] group flex items-center gap-2"
     >
       <span class="text-[10px] font-mono text-cyber-muted uppercase tracking-[0.3em] group-hover:text-cyber-accent transition-colors duration-300">
-        menu
+        back
       </span>
-      <div class="flex flex-col gap-[5px]">
-        <span class="block w-6 h-px bg-cyber-muted/60 group-hover:bg-cyber-accent transition-all duration-300 group-hover:w-5 origin-right" />
-        <span class="block w-4 h-px bg-cyber-muted/60 group-hover:bg-cyber-accent transition-all duration-300 group-hover:w-6" />
-      </div>
+      <svg
+        class="w-3 h-3 text-cyber-muted/60 group-hover:text-cyber-accent transition-colors duration-300 rotate-180"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <path d="M5 12h14M12 5l7 7-7 7" />
+      </svg>
     </NuxtLink>
   </template>
 </template>

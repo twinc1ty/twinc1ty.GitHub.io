@@ -5,6 +5,7 @@ import gsap from 'gsap'
 type Dir = 'top' | 'right' | 'bottom' | 'left'
 
 const { playHover, cleanup: cleanupAudio } = useAudio()
+const { nx, ny, isMobile, gyroAvailable, init: initInput, requestGyroPermission, cleanup: cleanupInput } = useInputDirection()
 
 const menuItems = [
   { label: '/identity', href: '/about', position: 'top' as Dir, angle: -Math.PI / 2 },
@@ -18,16 +19,16 @@ const nameRef = ref<HTMLElement>()
 const taglineRef = ref<HTMLElement>()
 const lineRef = ref<HTMLElement>()
 const itemRefs = ref<HTMLElement[]>([])
+const pulseRingRef = ref<HTMLElement>()
 
 const intensity = reactive<Record<Dir, number>>({ top: 0, right: 0, bottom: 0, left: 0 })
+const pulseBoost = ref(0) // 0-1, driven by tap-to-pulse on mobile
 
-function onMouseMove(e: MouseEvent) {
-  const cx = window.innerWidth / 2
-  const cy = window.innerHeight / 2
-  const dx = e.clientX - cx
-  const dy = e.clientY - cy
+function updateIntensity() {
+  const dx = nx.value - 0.5
+  const dy = ny.value - 0.5
   const dist = Math.sqrt(dx * dx + dy * dy)
-  const power = Math.min(1, dist / 300)
+  const power = Math.min(1, dist / 0.3) // 0.3 in normalized space is 300px equivalent
   const angle = Math.atan2(dy, dx)
 
   for (const item of menuItems) {
@@ -35,8 +36,85 @@ function onMouseMove(e: MouseEvent) {
   }
 }
 
+let intensityRaf = 0
+function intensityLoop() {
+  updateIntensity()
+  intensityRaf = requestAnimationFrame(intensityLoop)
+}
+
+let pulseTimeout: ReturnType<typeof setTimeout> | null = null
+
+function onTapPulse(e: MouseEvent | TouchEvent) {
+  let clientX: number, clientY: number
+  if ('touches' in e && e.touches.length) {
+    clientX = e.touches[0]!.clientX
+    clientY = e.touches[0]!.clientY
+  } else if ('clientX' in e) {
+    clientX = e.clientX
+    clientY = e.clientY
+  } else {
+    return
+  }
+
+  if (pulseRingRef.value) {
+    const rect = heroRef.value!.getBoundingClientRect()
+    pulseRingRef.value.style.left = `${clientX - rect.left}px`
+    pulseRingRef.value.style.top = `${clientY - rect.top}px`
+  }
+
+  if (isMobile.value && !gyroAvailable.value) {
+    requestGyroPermission()
+  }
+
+  playHover()
+
+  gsap.fromTo(pulseBoost, { value: 0 }, {
+    value: 1,
+    duration: 0.4,
+    ease: 'power2.out',
+  })
+
+  const items = itemRefs.value
+  if (items.length) {
+    gsap.fromTo(items, {
+      scale: 0.85,
+      filter: 'blur(4px)',
+    }, {
+      scale: 1,
+      filter: 'blur(0px)',
+      stagger: 0.08,
+      duration: 0.5,
+      ease: 'back.out(1.7)',
+    })
+  }
+
+  if (pulseRingRef.value) {
+    gsap.fromTo(pulseRingRef.value, {
+      scale: 0.3,
+      opacity: 0.8,
+    }, {
+      scale: 2.5,
+      opacity: 0,
+      duration: 1.6,
+      ease: 'power2.out',
+    })
+  }
+
+  // Clear decay
+  if (pulseTimeout) clearTimeout(pulseTimeout)
+
+  pulseTimeout = setTimeout(() => {
+    gsap.to(pulseBoost, {
+      value: 0,
+      duration: 2.5,
+      ease: 'power1.inOut',
+    })
+  }, 2500)
+}
+
 onMounted(() => {
-  window.addEventListener('mousemove', onMouseMove)
+  initInput()
+  intensityLoop()
 
   const tl = gsap.timeline({ defaults: { ease: 'expo.out' } })
 
@@ -73,16 +151,25 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
-  window.removeEventListener('mousemove', onMouseMove)
+  cancelAnimationFrame(intensityRaf)
+  if (pulseTimeout) clearTimeout(pulseTimeout)
+  cleanupInput()
   cleanupAudio()
 })
 
 function getItemStyle(pos: Dir) {
   const val = intensity[pos]
+  const mobile = isMobile.value
+  // Mobile: higher base opacity (0.45), pulse boost adds more
+  const baseOpacity = mobile ? 0.45 : 0.18
+  const boost = mobile ? pulseBoost.value * 0.55 : 0
+  const effectiveOpacity = Math.min(1, baseOpacity + val * (1 - baseOpacity) + boost)
+
+  const glowVal = Math.max(val, pulseBoost.value * 0.5)
   return {
-    opacity: 0.18 + val * 0.82,
-    textShadow: val > 0.25
-      ? `0 0 ${val * 40}px rgba(130, 190, 255, ${val * 0.6})`
+    opacity: effectiveOpacity,
+    textShadow: glowVal > 0.25
+      ? `0 0 ${glowVal * 40}px rgba(130, 190, 255, ${glowVal * 0.6})`
       : 'none',
     letterSpacing: `${0.12 + val * 0.06}em`,
   }
@@ -98,11 +185,20 @@ function setItemRef(el: any, i: number) {
     id="hero"
     ref="heroRef"
     class="relative min-h-screen flex items-center justify-center overflow-hidden"
+    @click="onTapPulse"
   >
     <!-- 3D sphere -->
-    <ClientOnly>
-      <ThreeScene />
-    </ClientOnly>
+    <div class="absolute inset-0 z-0">
+      <ClientOnly>
+        <ThreeScene :pulse-intensity="pulseBoost" />
+      </ClientOnly>
+    </div>
+
+    <!-- Pulse ring: soft radial gradient that expands outward on tap -->
+    <div
+      ref="pulseRingRef"
+      class="pulse-ring"
+    />
 
     <!-- Hero text -->
     <div class="relative z-10 text-center px-6">
@@ -122,6 +218,14 @@ function setItemRef(el: any, i: number) {
       >
         Engineering, Art & Literature
       </p>
+
+      <!-- Mobile hint -->
+      <p
+        v-if="isMobile"
+        class="mt-6 text-[9px] font-mono text-cyber-muted/40 tracking-[0.3em] uppercase animate-pulse"
+      >
+        {{ gyroAvailable ? '[ tilt to explore ]' : '[ tap to reveal ]' }}
+      </p>
     </div>
 
     <!-- Cardinal menu items -->
@@ -134,6 +238,7 @@ function setItemRef(el: any, i: number) {
       :class="`echo-${item.position}`"
       :style="getItemStyle(item.position)"
       @mouseenter="playHover"
+      @click.stop
     >
       {{ item.label }}
     </NuxtLink>
@@ -214,5 +319,28 @@ function setItemRef(el: any, i: number) {
     left: 6%;
     transform: none;
   }
+}
+
+/* Soft radial gradient pulse ring */
+.pulse-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 300px;
+  height: 300px;
+  margin-left: -150px;
+  margin-top: -150px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    transparent 30%,
+    rgba(122, 162, 247, 0.25) 50%,
+    rgba(122, 162, 247, 0.12) 65%,
+    transparent 85%
+  );
+  pointer-events: none;
+  z-index: 5;
+  opacity: 0;
+  will-change: transform, opacity;
 }
 </style>

@@ -2,22 +2,20 @@
 import { onMounted, onUnmounted, ref } from 'vue'
 import type * as THREETypes from 'three'
 
+const props = defineProps<{
+  pulseIntensity?: number
+}>()
+
 const containerRef = ref<HTMLDivElement>()
 let renderer: THREETypes.WebGLRenderer
 let animationId: number
-let mouseNX = 0.5, mouseNY = 0.5
 
-function onMouseMove(e: MouseEvent) {
-  mouseNX = e.clientX / window.innerWidth
-  mouseNY = e.clientY / window.innerHeight
-}
+const { nx, ny } = useInputDirection()
 
 onMounted(async () => {
   if (!containerRef.value) return
 
   const THREE = await import('three')
-
-  window.addEventListener('mousemove', onMouseMove)
 
   const scene = new THREE.Scene()
   const camera = new THREE.PerspectiveCamera(
@@ -36,7 +34,6 @@ onMounted(async () => {
   const pointCount = 600
   const positions = new Float32Array(pointCount * 3)
   const originalPositions = new Float32Array(pointCount * 3)
-  const sizes = new Float32Array(pointCount)
 
   for (let i = 0; i < pointCount; i++) {
     const theta = Math.random() * Math.PI * 2
@@ -53,21 +50,45 @@ onMounted(async () => {
     originalPositions[i * 3] = x
     originalPositions[i * 3 + 1] = y
     originalPositions[i * 3 + 2] = z
-    sizes[i] = 0.015 + Math.random() * 0.015
   }
 
   const pointsGeometry = new THREE.BufferGeometry()
   pointsGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3))
 
+  const colors = new Float32Array(pointCount * 3)
+  const baseColors = new Float32Array(pointCount * 3)
+  const baseColor = new THREE.Color(0x89b4fa)
+
+  const neonPalette = [
+    new THREE.Color(0x7aa2f7), // blue
+    new THREE.Color(0xbb9af7), // purple
+    new THREE.Color(0x9ece6a), // green
+    new THREE.Color(0xff9e64), // orange
+    new THREE.Color(0x2ac3de), // cyan
+    new THREE.Color(0xf7768e), // pink
+  ]
+  const particleNeonIndex = new Uint8Array(pointCount)
+  for (let i = 0; i < pointCount; i++) {
+    baseColors[i * 3] = baseColor.r
+    baseColors[i * 3 + 1] = baseColor.g
+    baseColors[i * 3 + 2] = baseColor.b
+    colors[i * 3] = baseColor.r
+    colors[i * 3 + 1] = baseColor.g
+    colors[i * 3 + 2] = baseColor.b
+    particleNeonIndex[i] = Math.floor(Math.random() * neonPalette.length)
+  }
+  pointsGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3))
+
   const pointsMaterial = new THREE.PointsMaterial({
-    color: 0x89b4fa,
     size: 0.025,
     transparent: true,
     opacity: 0.65,
     sizeAttenuation: true,
+    vertexColors: true,
   })
   const pointsMesh = new THREE.Points(pointsGeometry, pointsMaterial)
   scene.add(pointsMesh)
+  const tempColor = new THREE.Color()
 
   // Connection lines
   const linePositions: number[] = []
@@ -96,7 +117,6 @@ onMounted(async () => {
   const lines = new THREE.LineSegments(lineGeometry, lineMaterial)
   scene.add(lines)
 
-  // Outer ring
   const ringGeometry = new THREE.TorusGeometry(3.2, 0.004, 8, 140)
   const ringMaterial = new THREE.MeshBasicMaterial({
     color: 0x565f89,
@@ -107,7 +127,6 @@ onMounted(async () => {
   ring.rotation.x = Math.PI / 2
   scene.add(ring)
 
-  // Inner ring
   const ring2Geometry = new THREE.TorusGeometry(2.2, 0.003, 8, 100)
   const ring2Material = new THREE.MeshBasicMaterial({
     color: 0x414868,
@@ -124,9 +143,10 @@ onMounted(async () => {
   function animate() {
     time += 0.002
 
-    // Cursor-following rotation with slow base spin
-    const targetRotY = time * 0.2 + (mouseNX - 0.5) * 0.6
-    const targetRotX = Math.sin(time * 0.15) * 0.08 + (mouseNY - 0.5) * 0.4
+    const pulse = props.pulseIntensity ?? 0
+
+    const targetRotY = time * 0.2 + (nx.value - 0.5) * 0.6
+    const targetRotX = Math.sin(time * 0.15) * 0.08 + (ny.value - 0.5) * 0.4
     currentRotY += (targetRotY - currentRotY) * 0.025
     currentRotX += (targetRotX - currentRotX) * 0.025
 
@@ -135,23 +155,57 @@ onMounted(async () => {
     lines.rotation.y = currentRotY
     lines.rotation.x = currentRotX
 
-    // Breathing
     const breathe = 1 + Math.sin(time * 0.5) * 0.03
-    pointsMesh.scale.setScalar(breathe)
-    lines.scale.setScalar(breathe)
+    const pulseScale = breathe + pulse * 0.05
+    pointsMesh.scale.setScalar(pulseScale)
+    lines.scale.setScalar(pulseScale)
 
-    // Rings
+    const colorArray = pointsGeometry.attributes.color!.array as Float32Array
+    for (let i = 0; i < pointCount; i++) {
+      const neon = neonPalette[particleNeonIndex[i]!]!
+      tempColor.setRGB(
+        baseColors[i * 3]! + (neon.r - baseColors[i * 3]!) * pulse,
+        baseColors[i * 3 + 1]! + (neon.g - baseColors[i * 3 + 1]!) * pulse,
+        baseColors[i * 3 + 2]! + (neon.b - baseColors[i * 3 + 2]!) * pulse,
+      )
+      colorArray[i * 3] = tempColor.r
+      colorArray[i * 3 + 1] = tempColor.g
+      colorArray[i * 3 + 2] = tempColor.b
+    }
+    pointsGeometry.attributes.color!.needsUpdate = true
+    pointsMaterial.size = 0.025 + pulse * 0.008
+    pointsMaterial.opacity = 0.65 + pulse * 0.35
+    lineMaterial.opacity = 0.09 + pulse * 0.15
+
+    ringMaterial.opacity = 0.3 + pulse * 0.4
+    ring2Material.opacity = 0.15 + pulse * 0.3
+    ring.scale.setScalar(1 + pulse * 0.08)
+    ring2.scale.setScalar(1 + pulse * 0.06)
+
     ring.rotation.x = Math.PI / 2 + Math.sin(time * 0.12) * 0.12
     ring.rotation.z = time * 0.03
     ring2.rotation.x = Math.PI / 2 - Math.sin(time * 0.1) * 0.08
     ring2.rotation.z = -time * 0.05
 
-    // Particle drift
     const posArray = pointsGeometry.attributes.position!.array as Float32Array
     for (let i = 0; i < pointCount; i++) {
-      posArray[i * 3] = originalPositions[i * 3]! + Math.sin(time + i * 0.1) * 0.02
-      posArray[i * 3 + 1] = originalPositions[i * 3 + 1]! + Math.cos(time * 0.6 + i * 0.15) * 0.02
-      posArray[i * 3 + 2] = originalPositions[i * 3 + 2]! + Math.sin(time * 0.4 + i * 0.2) * 0.02
+      const ox = originalPositions[i * 3]!
+      const oy = originalPositions[i * 3 + 1]!
+      const oz = originalPositions[i * 3 + 2]!
+
+      const driftX = Math.sin(time + i * 0.1) * 0.02
+      const driftY = Math.cos(time * 0.6 + i * 0.15) * 0.02
+      const driftZ = Math.sin(time * 0.4 + i * 0.2) * 0.02
+
+      const len = Math.sqrt(ox * ox + oy * oy + oz * oz) || 1
+      const pushAmount = pulse * 0.15
+      const pushX = (ox / len) * pushAmount
+      const pushY = (oy / len) * pushAmount
+      const pushZ = (oz / len) * pushAmount
+
+      posArray[i * 3] = ox + driftX + pushX
+      posArray[i * 3 + 1] = oy + driftY + pushY
+      posArray[i * 3 + 2] = oz + driftZ + pushZ
     }
     pointsGeometry.attributes.position!.needsUpdate = true
 
@@ -174,7 +228,6 @@ onMounted(async () => {
 onUnmounted(() => {
   cancelAnimationFrame(animationId)
   renderer?.dispose()
-  window.removeEventListener('mousemove', onMouseMove)
 })
 </script>
 

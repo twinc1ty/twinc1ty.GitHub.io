@@ -14,6 +14,7 @@ const enterRef = ref<HTMLElement>()
 
 const { init: initAudio } = useAudio()
 
+// preloader made by claude mostly
 onMounted(() => {
   const start = performance.now()
   const minVisible = 1800

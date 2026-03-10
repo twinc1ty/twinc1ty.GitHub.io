@@ -33,7 +33,6 @@ function playStartup() {
 
   const now = ac.currentTime
 
-  // Deep sub-bass rumble — reactor powering on
   const sub = ac.createOscillator()
   const subGain = ac.createGain()
   sub.type = 'sawtooth'
@@ -56,7 +55,6 @@ function playStartup() {
   sub.start(now)
   sub.stop(now + 4)
 
-  // Mid-range growl — distorted harmonic
   const mid = ac.createOscillator()
   const midGain = ac.createGain()
   mid.type = 'sawtooth'
@@ -80,7 +78,7 @@ function playStartup() {
   mid.start(now)
   mid.stop(now + 4)
 
-  // Filtered noise sweep — hiss that builds and fades
+  // hiss that builds and fades
   const noise = createNoise(ac, 4)
   const noiseGain = ac.createGain()
   const noiseFilter = ac.createBiquadFilter()
@@ -99,7 +97,6 @@ function playStartup() {
   noise.start(now)
   noise.stop(now + 4)
 
-  // Distant metallic ping at the end — cold confirmation
   const ping = ac.createOscillator()
   const pingGain = ac.createGain()
   ping.type = 'sine'
