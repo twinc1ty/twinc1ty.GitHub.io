@@ -148,6 +148,25 @@ onMounted(() => {
       stagger: 0.1,
       duration: 0.6,
     }, 1.2)
+
+  // Neon edge glow: each item's borders trace one by one after intro
+  const edgeGlow = { boxShadow: '0 0 18px 5px rgba(130, 190, 255, 1), 0 0 45px 10px rgba(130, 190, 255, 0.7), 0 0 80px 20px rgba(130, 190, 255, 0.3)' }
+  const edgeOff = { opacity: 0, boxShadow: '0 0 0 0 transparent' }
+
+  const neonTl = gsap.timeline()
+  itemRefs.value.forEach((item, i) => {
+    const el = (item as any).$el || item
+    const edges = el.querySelectorAll('.edge')
+    const baseTime = i * 1.6
+    edges.forEach((edge, e) => {
+      neonTl
+        .to(edge, { opacity: 1, ...edgeGlow, duration: 0.5, ease: 'power2.in' }, baseTime + e * 0.3)
+        .to(edge, { ...edgeOff, duration: 1, ease: 'power2.out' }, baseTime + e * 0.3 + 0.5)
+    })
+  })
+
+  // Chain neon glow after the intro timeline finishes
+  tl.add(neonTl, '>-0.2')
 })
 
 onUnmounted(() => {
@@ -236,10 +255,14 @@ function setItemRef(el: any, i: number) {
       :to="item.href"
       class="echo-item"
       :class="`echo-${item.position}`"
-      :style="getItemStyle(item.position)"
+      :style="{ ...getItemStyle(item.position), '--item-index': i }"
       @mouseenter="playHover"
       @click.stop
     >
+      <span class="edge edge-top" />
+      <span class="edge edge-right" />
+      <span class="edge edge-bottom" />
+      <span class="edge edge-left" />
       {{ item.label }}
     </NuxtLink>
 
@@ -260,7 +283,32 @@ function setItemRef(el: any, i: number) {
   text-transform: lowercase;
   text-decoration: none;
   white-space: nowrap;
+  padding: 0.35em 0.75em;
   transition: opacity 0.12s ease, text-shadow 0.3s ease, letter-spacing 0.4s ease;
+}
+
+/* ── Neon border edges ── */
+.edge {
+  position: absolute;
+  background: #7aa2f7;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.edge-top {
+  top: 0; left: 0; right: 0; height: 1px;
+}
+
+.edge-right {
+  top: 0; right: 0; bottom: 0; width: 1px;
+}
+
+.edge-bottom {
+  bottom: 0; left: 0; right: 0; height: 1px;
+}
+
+.edge-left {
+  top: 0; left: 0; bottom: 0; width: 1px;
 }
 
 /* Desktop: cardinal directions */
