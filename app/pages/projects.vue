@@ -17,10 +17,8 @@ interface Repo {
 
 const cardsRef = ref<HTMLElement>()
 
-const { data: projectData } = await useAsyncData('projects', () =>
-  $fetch<{ repos: Repo[] }>('/data/projects.json')
-)
-const repos = computed(() => projectData.value?.repos || [])
+import projectData from '../../public/data/projects.json'
+const repos = computed(() => projectData?.repos || [])
 
 onMounted(() => {
   if (cardsRef.value) {
