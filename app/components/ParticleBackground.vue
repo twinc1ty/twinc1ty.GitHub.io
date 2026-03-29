@@ -16,7 +16,16 @@ interface Particle {
   dy: number
 }
 
-const colors = ['#7aa2f7', '#565f89', '#414868', '#9ece6a']
+function getThemeColors(): string[] {
+  const style = getComputedStyle(document.documentElement)
+  return [
+    style.getPropertyValue('--cyber-accent').trim() || '#7aa2f7',
+    style.getPropertyValue('--cyber-muted').trim() || '#565f89',
+    style.getPropertyValue('--cyber-subtle').trim() || '#414868',
+    style.getPropertyValue('--cyber-secondary').trim() || '#9ece6a',
+  ]
+}
+let colors = ['#7aa2f7', '#565f89', '#414868', '#9ece6a']
 const particleCount = 80
 const connectionDistance = 150
 const particles: Particle[] = []
@@ -37,6 +46,10 @@ function triggerDistort() {
 function init(canvas: HTMLCanvasElement) {
   const ctx = canvas.getContext('2d')
   if (!ctx) return
+
+  colors = getThemeColors()
+  const accentRgb = getComputedStyle(document.documentElement).getPropertyValue('--cyber-accent-rgb').trim() || '122, 162, 247'
+  const accentHex = getComputedStyle(document.documentElement).getPropertyValue('--cyber-accent').trim() || '#7aa2f7'
 
   function resize() {
     canvas.width = window.innerWidth
@@ -116,7 +129,7 @@ function init(canvas: HTMLCanvasElement) {
           const distortFade = Math.max(0, 1 - (distortA + distortB) * 0.02)
 
           const alpha = (1 - dist / connectionDistance) * 0.08 * distortFade
-          ctx!.strokeStyle = `rgba(122, 162, 247, ${alpha})`
+          ctx!.strokeStyle = `rgba(${accentRgb}, ${alpha})`
           ctx!.lineWidth = 0.5
           ctx!.beginPath()
           ctx!.moveTo(a.x, a.y)
@@ -133,7 +146,7 @@ function init(canvas: HTMLCanvasElement) {
       const size = p.size + glow * 2
 
       if (glow > 0.1) {
-        ctx!.shadowColor = '#7aa2f7'
+        ctx!.shadowColor = accentHex
         ctx!.shadowBlur = glow * 15
       }
 

@@ -65,7 +65,7 @@ function formatDate(dateStr: string) {
 <style>
 .blog-content {
   font-family: 'Inter', 'Space Grotesk', sans-serif;
-  color: #a9b1d6;
+  color: var(--cyber-text-dim);
   line-height: 1.85;
   font-size: 1.05rem;
 }
@@ -76,7 +76,7 @@ function formatDate(dateStr: string) {
 .blog-content h3,
 .blog-content h4 {
   font-family: 'Inter', 'Space Grotesk', sans-serif;
-  color: #c0caf5;
+  color: var(--cyber-text);
   font-weight: 700;
   letter-spacing: -0.01em;
   line-height: 1.35;
@@ -87,15 +87,15 @@ function formatDate(dateStr: string) {
   margin-top: 3rem;
   margin-bottom: 1rem;
   padding-bottom: 0.5rem;
-  border-bottom: 1px solid rgba(122, 162, 247, 0.1);
-  color: #7aa2f7;
+  border-bottom: 1px solid rgba(var(--cyber-accent-rgb), 0.1);
+  color: var(--cyber-accent);
 }
 
 .blog-content h3 {
   font-size: 1.3rem;
   margin-top: 2.25rem;
   margin-bottom: 0.75rem;
-  color: #c0caf5;
+  color: var(--cyber-text);
 }
 
 .blog-content h4 {
@@ -108,32 +108,31 @@ function formatDate(dateStr: string) {
 /* Paragraphs */
 .blog-content p {
   margin-bottom: 1.25rem;
-  color: #a9b1d6;
+  color: var(--cyber-text-dim);
   line-height: 1.85;
 }
 
 /* Links */
 .blog-content a {
-  color: #7aa2f7;
+  color: var(--cyber-accent);
   text-decoration: underline;
-  text-decoration-color: rgba(122, 162, 247, 0.3);
+  text-decoration-color: rgba(var(--cyber-accent-rgb), 0.3);
   text-underline-offset: 3px;
   text-decoration-thickness: 1px;
   transition: text-decoration-color 0.2s ease, color 0.2s ease;
 }
 
 .blog-content a:hover {
-  color: #89b4fa;
-  text-decoration-color: rgba(122, 162, 247, 0.8);
+  text-decoration-color: rgba(var(--cyber-accent-rgb), 0.8);
 }
 
 /* Inline code */
 .blog-content code {
   font-family: 'Space Mono', monospace;
   font-size: 0.85em;
-  color: #7aa2f7;
-  background: rgba(122, 162, 247, 0.08);
-  border: 1px solid rgba(122, 162, 247, 0.1);
+  color: var(--cyber-accent);
+  background: rgba(var(--cyber-accent-rgb), 0.08);
+  border: 1px solid rgba(var(--cyber-accent-rgb), 0.1);
   padding: 0.15em 0.4em;
   border-radius: 4px;
 }
@@ -141,7 +140,7 @@ function formatDate(dateStr: string) {
 /* Code blocks */
 .blog-content pre {
   background: #0a0a0f !important;
-  border: 1px solid rgba(122, 162, 247, 0.12);
+  border: 1px solid rgba(var(--cyber-accent-rgb), 0.12);
   border-radius: 8px;
   padding: 1.25rem 1.5rem;
   margin: 1.5rem 0;
@@ -155,7 +154,7 @@ function formatDate(dateStr: string) {
   border: none;
   padding: 0;
   font-size: inherit;
-  color: #a9b1d6;
+  color: var(--cyber-text-dim);
 }
 
 /* Lists */
@@ -174,22 +173,22 @@ function formatDate(dateStr: string) {
 }
 
 .blog-content li {
-  color: #a9b1d6;
+  color: var(--cyber-text-dim);
   margin-bottom: 0.4rem;
   line-height: 1.75;
   padding-left: 0.25rem;
 }
 
 .blog-content li::marker {
-  color: #7aa2f7;
+  color: var(--cyber-accent);
 }
 
 /* Blockquotes */
 .blog-content blockquote {
-  border-left: 3px solid rgba(122, 162, 247, 0.3);
+  border-left: 3px solid rgba(var(--cyber-accent-rgb), 0.3);
   padding: 0.75rem 1.25rem;
   margin: 1.5rem 0;
-  background: rgba(122, 162, 247, 0.03);
+  background: rgba(var(--cyber-accent-rgb), 0.03);
   border-radius: 0 6px 6px 0;
 }
 
@@ -202,7 +201,7 @@ function formatDate(dateStr: string) {
 /* Images */
 .blog-content img {
   border-radius: 8px;
-  border: 1px solid rgba(122, 162, 247, 0.1);
+  border: 1px solid rgba(var(--cyber-accent-rgb), 0.1);
   margin: 1.5rem 0;
   max-width: 100%;
 }
@@ -211,13 +210,13 @@ function formatDate(dateStr: string) {
 .blog-content hr {
   border: none;
   height: 1px;
-  background: linear-gradient(to right, rgba(122, 162, 247, 0.2), rgba(122, 162, 247, 0.05), transparent);
+  background: linear-gradient(to right, rgba(var(--cyber-accent-rgb), 0.2), rgba(var(--cyber-accent-rgb), 0.05), transparent);
   margin: 2.5rem 0;
 }
 
 /* Strong / Bold */
 .blog-content strong {
-  color: #c0caf5;
+  color: var(--cyber-text);
   font-weight: 600;
 }
 

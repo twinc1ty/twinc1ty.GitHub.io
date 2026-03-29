@@ -2,15 +2,32 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Default fallback values (overridden by useTheme at runtime) */
+:root {
+  --cyber-dark: #0c0c10;
+  --cyber-darker: #060608;
+  --cyber-surface: #16161e;
+  --cyber-surface-light: #1e1e28;
+  --cyber-accent: #7aa2f7;
+  --cyber-accent-rgb: 122, 162, 247;
+  --cyber-accent-dim: #7aa2f733;
+  --cyber-secondary: #9ece6a;
+  --cyber-secondary-rgb: 158, 206, 106;
+  --cyber-muted: #565f89;
+  --cyber-text: #c0caf5;
+  --cyber-text-dim: #a9b1d6;
+  --cyber-subtle: #414868;
+}
+
 @layer base {
   body {
-    background-color: #0c0c10;
-    color: #a9b1d6;
+    background-color: var(--cyber-dark);
+    color: var(--cyber-text-dim);
     font-family: 'Space Grotesk', sans-serif;
   }
 
   ::selection {
-    background-color: rgba(122, 162, 247, 0.2);
+    background-color: rgba(var(--cyber-accent-rgb), 0.2);
     color: #ffffff;
   }
 
@@ -19,38 +36,38 @@
   }
 
   ::-webkit-scrollbar-track {
-    background-color: #060608;
+    background-color: var(--cyber-darker);
   }
 
   ::-webkit-scrollbar-thumb {
-    background-color: #414868;
+    background-color: var(--cyber-subtle);
     border-radius: 9999px;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background-color: rgba(122, 162, 247, 0.4);
+    background-color: rgba(var(--cyber-accent-rgb), 0.4);
   }
 }
 
 @layer components {
   .neon-text {
-    color: #7aa2f7;
-    text-shadow: 0 0 10px #7aa2f744;
+    color: var(--cyber-accent);
+    text-shadow: 0 0 10px rgba(var(--cyber-accent-rgb), 0.27);
   }
 
   .neon-text-secondary {
-    color: #9ece6a;
-    text-shadow: 0 0 10px #9ece6a44;
+    color: var(--cyber-secondary);
+    text-shadow: 0 0 10px rgba(var(--cyber-secondary-rgb), 0.27);
   }
 
   .neon-border {
-    border: 1px solid rgba(122, 162, 247, 0.15);
-    box-shadow: 0 0 8px #7aa2f711;
+    border: 1px solid rgba(var(--cyber-accent-rgb), 0.15);
+    box-shadow: 0 0 8px rgba(var(--cyber-accent-rgb), 0.07);
   }
 
   .neon-border:hover {
-    border-color: rgba(122, 162, 247, 0.35);
-    box-shadow: 0 0 12px #7aa2f722;
+    border-color: rgba(var(--cyber-accent-rgb), 0.35);
+    box-shadow: 0 0 12px rgba(var(--cyber-accent-rgb), 0.13);
   }
 
   .section-heading {
@@ -83,13 +100,13 @@
 .glitch::before {
   animation: glitch-1 4s infinite linear alternate-reverse;
   clip-path: polygon(0 0, 100% 0, 100% 33%, 0 33%);
-  -webkit-text-stroke: 1px #7aa2f7;
+  -webkit-text-stroke: 1px var(--cyber-accent);
 }
 
 .glitch::after {
   animation: glitch-2 4s infinite linear alternate-reverse;
   clip-path: polygon(0 67%, 100% 67%, 100% 100%, 0 100%);
-  -webkit-text-stroke: 1px #9ece6a;
+  -webkit-text-stroke: 1px var(--cyber-secondary);
 }
 
 @keyframes glitch-1 {
@@ -124,8 +141,8 @@
 .folder-tab {
   position: relative;
   display: inline-block;
-  background: linear-gradient(135deg, rgba(122, 162, 247, 0.08), rgba(22, 22, 30, 0.8));
-  border: 1px solid rgba(122, 162, 247, 0.12);
+  background: linear-gradient(135deg, rgba(var(--cyber-accent-rgb), 0.08), rgba(22, 22, 30, 0.8));
+  border: 1px solid rgba(var(--cyber-accent-rgb), 0.12);
   border-bottom: none;
   border-radius: 4px 4px 0 0;
   padding: 4px 14px;
@@ -135,7 +152,7 @@
 .folder-body {
   position: relative;
   background: linear-gradient(160deg, rgba(22, 22, 30, 0.7) 0%, rgba(12, 12, 16, 0.9) 100%);
-  border: 1px solid rgba(122, 162, 247, 0.1);
+  border: 1px solid rgba(var(--cyber-accent-rgb), 0.1);
   border-radius: 0 6px 6px 6px;
   padding: 1.25rem;
   backdrop-filter: blur(8px);
@@ -144,8 +161,8 @@
 }
 
 .cyber-folder:hover .folder-body {
-  border-color: rgba(122, 162, 247, 0.3);
-  box-shadow: 0 0 20px rgba(122, 162, 247, 0.06), inset 0 0 30px rgba(122, 162, 247, 0.02);
+  border-color: rgba(var(--cyber-accent-rgb), 0.3);
+  box-shadow: 0 0 20px rgba(var(--cyber-accent-rgb), 0.06), inset 0 0 30px rgba(var(--cyber-accent-rgb), 0.02);
 }
 
 .scanline-overlay {
@@ -155,8 +172,8 @@
     0deg,
     transparent,
     transparent 2px,
-    rgba(122, 162, 247, 0.015) 2px,
-    rgba(122, 162, 247, 0.015) 4px
+    rgba(var(--cyber-accent-rgb), 0.015) 2px,
+    rgba(var(--cyber-accent-rgb), 0.015) 4px
   );
   pointer-events: none;
   opacity: 0;
@@ -183,15 +200,15 @@
 .corner-accent.top-left {
   top: 0;
   left: 0;
-  border-top: 1px solid rgba(122, 162, 247, 0.5);
-  border-left: 1px solid rgba(122, 162, 247, 0.5);
+  border-top: 1px solid rgba(var(--cyber-accent-rgb), 0.5);
+  border-left: 1px solid rgba(var(--cyber-accent-rgb), 0.5);
 }
 
 .corner-accent.bottom-right {
   bottom: 0;
   right: 0;
-  border-bottom: 1px solid rgba(122, 162, 247, 0.5);
-  border-right: 1px solid rgba(122, 162, 247, 0.5);
+  border-bottom: 1px solid rgba(var(--cyber-accent-rgb), 0.5);
+  border-right: 1px solid rgba(var(--cyber-accent-rgb), 0.5);
 }
 
 /* Cyberpunk tech chips */
@@ -199,18 +216,18 @@
   padding: 4px 12px;
   font-family: 'Space Mono', monospace;
   font-size: 11px;
-  color: rgba(122, 162, 247, 0.7);
-  background: linear-gradient(135deg, rgba(122, 162, 247, 0.06), rgba(122, 162, 247, 0.02));
-  border: 1px solid rgba(122, 162, 247, 0.1);
+  color: rgba(var(--cyber-accent-rgb), 0.7);
+  background: linear-gradient(135deg, rgba(var(--cyber-accent-rgb), 0.06), rgba(var(--cyber-accent-rgb), 0.02));
+  border: 1px solid rgba(var(--cyber-accent-rgb), 0.1);
   border-radius: 2px;
   position: relative;
   transition: all 0.3s ease;
 }
 
 .cyber-chip:hover {
-  color: rgba(122, 162, 247, 0.9);
-  border-color: rgba(122, 162, 247, 0.3);
-  box-shadow: 0 0 10px rgba(122, 162, 247, 0.08);
+  color: rgba(var(--cyber-accent-rgb), 0.9);
+  border-color: rgba(var(--cyber-accent-rgb), 0.3);
+  box-shadow: 0 0 10px rgba(var(--cyber-accent-rgb), 0.08);
 }
 
 /* Cyberpunk contact chips */
@@ -221,9 +238,9 @@
   font-size: 11px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: rgba(122, 162, 247, 0.7);
+  color: rgba(var(--cyber-accent-rgb), 0.7);
   background: linear-gradient(160deg, rgba(22, 22, 30, 0.7), rgba(12, 12, 16, 0.9));
-  border: 1px solid rgba(122, 162, 247, 0.12);
+  border: 1px solid rgba(var(--cyber-accent-rgb), 0.12);
   border-radius: 2px;
   transition: all 0.3s ease;
   overflow: hidden;
@@ -237,8 +254,8 @@
     0deg,
     transparent,
     transparent 2px,
-    rgba(122, 162, 247, 0.015) 2px,
-    rgba(122, 162, 247, 0.015) 4px
+    rgba(var(--cyber-accent-rgb), 0.015) 2px,
+    rgba(var(--cyber-accent-rgb), 0.015) 4px
   );
   opacity: 0;
   transition: opacity 0.3s ease;
@@ -249,8 +266,8 @@
 }
 
 .contact-chip:hover {
-  color: rgba(122, 162, 247, 0.95);
-  border-color: rgba(122, 162, 247, 0.35);
-  box-shadow: 0 0 20px rgba(122, 162, 247, 0.08), inset 0 0 20px rgba(122, 162, 247, 0.02);
+  color: rgba(var(--cyber-accent-rgb), 0.95);
+  border-color: rgba(var(--cyber-accent-rgb), 0.35);
+  box-shadow: 0 0 20px rgba(var(--cyber-accent-rgb), 0.08), inset 0 0 20px rgba(var(--cyber-accent-rgb), 0.02);
   transform: translateY(-2px);
 }

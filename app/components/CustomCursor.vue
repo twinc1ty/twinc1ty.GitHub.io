@@ -85,7 +85,7 @@ function onMouseUp() {
   left: 0;
   width: 40px;
   height: 40px;
-  border: 1.5px solid rgba(122, 162, 247, 0.5);
+  border: 1.5px solid rgba(var(--cyber-accent-rgb), 0.5);
   border-radius: 50%;
   pointer-events: none;
   z-index: 99998;
@@ -95,7 +95,7 @@ function onMouseUp() {
 .cursor-outer.cursor-active {
   width: 30px;
   height: 30px;
-  border-color: rgba(122, 162, 247, 0.8);
+  border-color: rgba(var(--cyber-accent-rgb), 0.8);
 }
 
 .cursor-dot {

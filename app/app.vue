@@ -1,6 +1,12 @@
 <script setup lang="ts">
 import gsap from 'gsap'
 
+const { initRandomTheme } = useTheme()
+
+onMounted(() => {
+  initRandomTheme()
+})
+
 function onBeforeEnter(el: Element) {
   gsap.set(el, { opacity: 0, scale: 0.97, filter: 'blur(8px)' })
 }

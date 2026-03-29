@@ -23,6 +23,36 @@ const pulseRingRef = ref<HTMLElement>()
 
 const intensity = reactive<Record<Dir, number>>({ top: 0, right: 0, bottom: 0, left: 0 })
 const pulseBoost = ref(0) // 0-1, driven by tap-to-pulse on mobile
+const edgeGlowActive = reactive<Record<Dir, boolean>>({ top: false, right: false, bottom: false, left: false })
+
+function playEdgeGlow(itemIndex: number) {
+  const item = itemRefs.value[itemIndex]
+  if (!item) return
+  const pos = menuItems[itemIndex]!.position
+  if (edgeGlowActive[pos]) return
+  edgeGlowActive[pos] = true
+
+  const el = (item as any).$el || item
+  const edges = el.querySelectorAll('.edge')
+  const rgb = getComputedStyle(document.documentElement).getPropertyValue('--cyber-accent-rgb').trim()
+  const glow = { boxShadow: `0 0 4px 1px rgba(${rgb}, 1), 0 0 12px 3px rgba(${rgb}, 0.8), 0 0 30px 6px rgba(${rgb}, 0.3)` }
+  const off = { opacity: 0, boxShadow: '0 0 0 0 transparent' }
+
+  const tl = gsap.timeline({
+    onComplete: () => { edgeGlowActive[pos] = false },
+  })
+  edges.forEach((edge: Element, e: number) => {
+    tl.to(edge, { opacity: 1, ...glow, duration: 0.3, ease: 'power2.in' }, e * 0.15)
+      .to(edge, { ...off, duration: 0.5, ease: 'power2.out' }, e * 0.15 + 0.3)
+  })
+}
+
+function onItemHover(index: number) {
+  playHover()
+  if (!isMobile.value) {
+    playEdgeGlow(index)
+  }
+}
 
 function updateIntensity() {
   const dx = nx.value - 0.5
@@ -39,6 +69,16 @@ function updateIntensity() {
 let intensityRaf = 0
 function intensityLoop() {
   updateIntensity()
+
+  // Mobile: trigger edge glow when tilting toward a menu item
+  if (isMobile.value) {
+    menuItems.forEach((item, i) => {
+      if (intensity[item.position] > 0.7) {
+        playEdgeGlow(i)
+      }
+    })
+  }
+
   intensityRaf = requestAnimationFrame(intensityLoop)
 }
 
@@ -150,23 +190,12 @@ onMounted(() => {
     }, 1.2)
 
   // Neon edge glow: each item's borders trace one by one after intro
-  const edgeGlow = { boxShadow: '0 0 18px 5px rgba(130, 190, 255, 1), 0 0 45px 10px rgba(130, 190, 255, 0.7), 0 0 80px 20px rgba(130, 190, 255, 0.3)' }
-  const edgeOff = { opacity: 0, boxShadow: '0 0 0 0 transparent' }
-
-  const neonTl = gsap.timeline()
-  itemRefs.value.forEach((item, i) => {
-    const el = (item as any).$el || item
-    const edges = el.querySelectorAll('.edge')
-    const baseTime = i * 1.6
-    edges.forEach((edge, e) => {
-      neonTl
-        .to(edge, { opacity: 1, ...edgeGlow, duration: 0.5, ease: 'power2.in' }, baseTime + e * 0.3)
-        .to(edge, { ...edgeOff, duration: 1, ease: 'power2.out' }, baseTime + e * 0.3 + 0.5)
-    })
+  // Full circle: identity → constructs → logs → signal, then identity again
+  const introSequence = [0, 1, 2, 3, 0]
+  const introDelay = tl.duration() - 0.2
+  introSequence.forEach((itemIndex, i) => {
+    setTimeout(() => playEdgeGlow(itemIndex), (introDelay + i * 1) * 1000)
   })
-
-  // Chain neon glow after the intro timeline finishes
-  tl.add(neonTl, '>-0.2')
 })
 
 onUnmounted(() => {
@@ -188,7 +217,7 @@ function getItemStyle(pos: Dir) {
   return {
     opacity: effectiveOpacity,
     textShadow: glowVal > 0.25
-      ? `0 0 ${glowVal * 40}px rgba(130, 190, 255, ${glowVal * 0.6})`
+      ? `0 0 ${glowVal * 40}px rgba(var(--cyber-accent-rgb), ${glowVal * 0.6})`
       : 'none',
     letterSpacing: `${0.12 + val * 0.06}em`,
   }
@@ -256,7 +285,7 @@ function setItemRef(el: any, i: number) {
       class="echo-item"
       :class="`echo-${item.position}`"
       :style="{ ...getItemStyle(item.position), '--item-index': i }"
-      @mouseenter="playHover"
+      @mouseenter="onItemHover(i)"
       @click.stop
     >
       <span class="edge edge-top" />
@@ -279,7 +308,7 @@ function setItemRef(el: any, i: number) {
   z-index: 20;
   font-family: 'Space Mono', monospace;
   font-size: clamp(0.85rem, 2.5vw, 1.6rem);
-  color: #7aa2f7;
+  color: var(--cyber-accent);
   text-transform: lowercase;
   text-decoration: none;
   white-space: nowrap;
@@ -290,25 +319,25 @@ function setItemRef(el: any, i: number) {
 /* ── Neon border edges ── */
 .edge {
   position: absolute;
-  background: #7aa2f7;
+  background: var(--cyber-accent);
   opacity: 0;
   pointer-events: none;
 }
 
 .edge-top {
-  top: 0; left: 0; right: 0; height: 1px;
+  top: 0; left: 0; right: 0; height: 2px;
 }
 
 .edge-right {
-  top: 0; right: 0; bottom: 0; width: 1px;
+  top: 0; right: 0; bottom: 0; width: 2px;
 }
 
 .edge-bottom {
-  bottom: 0; left: 0; right: 0; height: 1px;
+  bottom: 0; left: 0; right: 0; height: 2px;
 }
 
 .edge-left {
-  top: 0; left: 0; bottom: 0; width: 1px;
+  top: 0; left: 0; bottom: 0; width: 2px;
 }
 
 /* Desktop: cardinal directions */
@@ -382,8 +411,8 @@ function setItemRef(el: any, i: number) {
   background: radial-gradient(
     circle,
     transparent 30%,
-    rgba(122, 162, 247, 0.25) 50%,
-    rgba(122, 162, 247, 0.12) 65%,
+    rgba(var(--cyber-accent-rgb), 0.25) 50%,
+    rgba(var(--cyber-accent-rgb), 0.12) 65%,
     transparent 85%
   );
   pointer-events: none;

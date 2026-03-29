@@ -57,12 +57,18 @@ onMounted(async () => {
 
   const colors = new Float32Array(pointCount * 3)
   const baseColors = new Float32Array(pointCount * 3)
-  const baseColor = new THREE.Color(0x89b4fa)
+  const style = getComputedStyle(document.documentElement)
+  const accentHex = style.getPropertyValue('--cyber-accent').trim() || '#7aa2f7'
+  const secondaryHex = style.getPropertyValue('--cyber-secondary').trim() || '#9ece6a'
+  const mutedHex = style.getPropertyValue('--cyber-muted').trim() || '#565f89'
+  const subtleHex = style.getPropertyValue('--cyber-subtle').trim() || '#414868'
+
+  const baseColor = new THREE.Color(accentHex)
 
   const neonPalette = [
-    new THREE.Color(0x7aa2f7), // blue
+    new THREE.Color(accentHex),
     new THREE.Color(0xbb9af7), // purple
-    new THREE.Color(0x9ece6a), // green
+    new THREE.Color(secondaryHex),
     new THREE.Color(0xff9e64), // orange
     new THREE.Color(0x2ac3de), // cyan
     new THREE.Color(0xf7768e), // pink
@@ -110,7 +116,7 @@ onMounted(async () => {
   const lineGeometry = new THREE.BufferGeometry()
   lineGeometry.setAttribute('position', new THREE.Float32BufferAttribute(linePositions, 3))
   const lineMaterial = new THREE.LineBasicMaterial({
-    color: 0x7aa2f7,
+    color: new THREE.Color(accentHex),
     transparent: true,
     opacity: 0.09,
   })
@@ -125,7 +131,7 @@ onMounted(async () => {
 
   if (!isMobile.value) {
     ringMaterial = new THREE.MeshBasicMaterial({
-      color: 0x565f89,
+      color: new THREE.Color(mutedHex),
       transparent: true,
       opacity: 0.3,
     })
@@ -134,7 +140,7 @@ onMounted(async () => {
     scene.add(ring)
 
     ring2Material = new THREE.MeshBasicMaterial({
-      color: 0x414868,
+      color: new THREE.Color(subtleHex),
       transparent: true,
       opacity: 0.15,
     })

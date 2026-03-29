@@ -11,17 +11,17 @@ export default {
     extend: {
       colors: {
         cyber: {
-          dark: '#0c0c10',
-          darker: '#060608',
-          surface: '#16161e',
-          'surface-light': '#1e1e28',
-          accent: '#7aa2f7',
-          'accent-dim': '#7aa2f733',
-          secondary: '#9ece6a',
-          muted: '#565f89',
-          text: '#c0caf5',
-          'text-dim': '#a9b1d6',
-          subtle: '#414868',
+          dark: 'var(--cyber-dark)',
+          darker: 'var(--cyber-darker)',
+          surface: 'var(--cyber-surface)',
+          'surface-light': 'var(--cyber-surface-light)',
+          accent: 'var(--cyber-accent)',
+          'accent-dim': 'var(--cyber-accent-dim)',
+          secondary: 'var(--cyber-secondary)',
+          muted: 'var(--cyber-muted)',
+          text: 'var(--cyber-text)',
+          'text-dim': 'var(--cyber-text-dim)',
+          subtle: 'var(--cyber-subtle)',
         },
       },
       fontFamily: {
@@ -30,8 +30,8 @@ export default {
         sans: ['Space Grotesk', 'sans-serif'],
       },
       boxShadow: {
-        'neon-accent': '0 0 5px #7aa2f7, 0 0 20px #7aa2f733',
-        'neon-secondary': '0 0 5px #9ece6a, 0 0 20px #9ece6a33',
+        'neon-accent': '0 0 5px var(--cyber-accent), 0 0 20px var(--cyber-accent-dim)',
+        'neon-secondary': '0 0 5px var(--cyber-secondary), 0 0 20px color-mix(in srgb, var(--cyber-secondary) 20%, transparent)',
       },
       animation: {
         'pulse-glow': 'pulse-glow 3s ease-in-out infinite',
