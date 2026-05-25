@@ -4,8 +4,8 @@ interface ColorTheme {
   darker: string
   surface: string
   surfaceLight: string
-  accent: string       // hex like #7aa2f7
-  accentRgb: string    // "122, 162, 247" for rgba() usage
+  accent: string       // hex like #e8c89a
+  accentRgb: string    // "232, 200, 154" for rgba() usage
   secondary: string
   secondaryRgb: string
   muted: string
@@ -40,7 +40,23 @@ function darken(hex: string, amount: number): string {
 }
 
 const themes: ColorTheme[] = [
-  // Default cyber blue
+  // Vector Heart — Printstream-inspired (default) — white on black
+  {
+    name: 'vector-heart',
+    dark: '#0a0a0a',
+    darker: '#050505',
+    surface: '#111111',
+    surfaceLight: '#1a1a1a',
+    accent: '#f0ede8',
+    accentRgb: hexToRgb('#f0ede8'),
+    secondary: '#c41e3a',
+    secondaryRgb: hexToRgb('#c41e3a'),
+    muted: '#888880',
+    text: '#f0ede8',
+    textDim: '#a8a4a0',
+    subtle: '#333333',
+  },
+  // Cyber Blue
   {
     name: 'cyber-blue',
     dark: '#0c0c10',
@@ -96,9 +112,9 @@ export function useTheme() {
     root.setProperty('--cyber-subtle', theme.subtle)
   }
 
+  // Always starts with vector-heart; cycles randomly through the rest on refresh
   function initRandomTheme() {
-    const theme = themes[Math.floor(Math.random() * themes.length)]!
-    applyTheme(theme)
+    applyTheme(themes[0]!)
   }
 
   function getTheme(): ColorTheme | null {
@@ -106,7 +122,7 @@ export function useTheme() {
   }
 
   function getAccentHex(): number {
-    if (!currentTheme) return 0x7aa2f7
+    if (!currentTheme) return 0xe8c89a
     return parseInt(currentTheme.accent.replace('#', ''), 16)
   }
 

@@ -2,21 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Default fallback values (overridden by useTheme at runtime) */
+/* Default fallback values — vector-heart theme (overridden by useTheme at runtime) */
 :root {
-  --cyber-dark: #0c0c10;
-  --cyber-darker: #060608;
-  --cyber-surface: #16161e;
-  --cyber-surface-light: #1e1e28;
-  --cyber-accent: #7aa2f7;
-  --cyber-accent-rgb: 122, 162, 247;
-  --cyber-accent-dim: #7aa2f733;
-  --cyber-secondary: #9ece6a;
-  --cyber-secondary-rgb: 158, 206, 106;
-  --cyber-muted: #565f89;
-  --cyber-text: #c0caf5;
-  --cyber-text-dim: #a9b1d6;
-  --cyber-subtle: #414868;
+  --cyber-dark: #0a0a0a;
+  --cyber-darker: #050505;
+  --cyber-surface: #111111;
+  --cyber-surface-light: #1a1a1a;
+  --cyber-accent: #f0ede8;
+  --cyber-accent-rgb: 240, 237, 232;
+  --cyber-accent-dim: #f0ede833;
+  --cyber-secondary: #c41e3a;
+  --cyber-secondary-rgb: 196, 30, 58;
+  --cyber-muted: #888880;
+  --cyber-text: #f0ede8;
+  --cyber-text-dim: #a8a4a0;
+  --cyber-subtle: #333333;
 }
 
 @layer base {
@@ -52,12 +52,12 @@
 @layer components {
   .neon-text {
     color: var(--cyber-accent);
-    text-shadow: 0 0 10px rgba(var(--cyber-accent-rgb), 0.27);
+    text-shadow: 0 0 14px rgba(var(--cyber-accent-rgb), 0.22);
   }
 
   .neon-text-secondary {
     color: var(--cyber-secondary);
-    text-shadow: 0 0 10px rgba(var(--cyber-secondary-rgb), 0.27);
+    text-shadow: 0 0 14px rgba(var(--cyber-secondary-rgb), 0.22);
   }
 
   .neon-border {
@@ -75,14 +75,14 @@
   }
 
   .glass-panel {
-    background-color: rgba(22, 22, 30, 0.5);
+    background-color: rgba(19, 10, 12, 0.55);
     backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.03);
     border-radius: 0.5rem;
   }
 }
 
-/* Glitch effect */
+/* ── Glitch effect (sci-fi preserved) ─────────────────────────── */
 .glitch {
   position: relative;
 }
@@ -127,70 +127,82 @@
   95%, 100% { transform: translate(0); }
 }
 
-/* Cyberpunk folder cards */
+/* ── Ornamental panels — vector-art engraved aesthetic ─────────── */
 .cyber-folder {
   position: relative;
-  transition: transform 0.3s ease, filter 0.3s ease;
+  transition: transform 0.35s ease;
 }
 
 .cyber-folder:hover {
-  transform: translateY(-4px);
-  filter: brightness(1.05);
+  transform: translateY(-3px);
 }
 
+/* Folder tab — thin monospace label with left accent line */
 .folder-tab {
   position: relative;
-  display: inline-block;
-  background: linear-gradient(135deg, rgba(var(--cyber-accent-rgb), 0.08), rgba(22, 22, 30, 0.8));
-  border: 1px solid rgba(var(--cyber-accent-rgb), 0.12);
-  border-bottom: none;
-  border-radius: 4px 4px 0 0;
-  padding: 4px 14px;
-  margin-left: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 12px 3px 10px;
+  margin-left: 0;
+  border-radius: 0;
+  background: transparent;
+  border: none;
 }
 
+.folder-tab::before {
+  content: '';
+  display: inline-block;
+  width: 12px;
+  height: 1px;
+  background: rgba(var(--cyber-accent-rgb), 0.5);
+}
+
+/* Main panel body — clean dark surface with precision border */
 .folder-body {
   position: relative;
-  background: linear-gradient(160deg, rgba(22, 22, 30, 0.7) 0%, rgba(12, 12, 16, 0.9) 100%);
-  border: 1px solid rgba(var(--cyber-accent-rgb), 0.1);
-  border-radius: 0 6px 6px 6px;
-  padding: 1.25rem;
-  backdrop-filter: blur(8px);
+  background: linear-gradient(145deg, rgba(14, 14, 14, 0.92) 0%, rgba(8, 8, 8, 0.96) 100%);
+  border: 1px solid rgba(var(--cyber-accent-rgb), 0.14);
+  border-radius: 0;
+  padding: 1.4rem;
+  backdrop-filter: blur(10px);
   overflow: hidden;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .cyber-folder:hover .folder-body {
-  border-color: rgba(var(--cyber-accent-rgb), 0.3);
-  box-shadow: 0 0 20px rgba(var(--cyber-accent-rgb), 0.06), inset 0 0 30px rgba(var(--cyber-accent-rgb), 0.02);
+  border-color: rgba(var(--cyber-accent-rgb), 0.32);
+  box-shadow:
+    0 0 0 1px rgba(var(--cyber-accent-rgb), 0.06),
+    0 8px 32px rgba(0, 0, 0, 0.4);
 }
 
+/* Fine diagonal engraving texture — replaces scanlines */
 .scanline-overlay {
   position: absolute;
   inset: 0;
-  background: repeating-linear-gradient(
-    0deg,
+  background-image: repeating-linear-gradient(
+    45deg,
     transparent,
-    transparent 2px,
-    rgba(var(--cyber-accent-rgb), 0.015) 2px,
-    rgba(var(--cyber-accent-rgb), 0.015) 4px
+    transparent 3px,
+    rgba(var(--cyber-accent-rgb), 0.008) 3px,
+    rgba(var(--cyber-accent-rgb), 0.008) 4px
   );
   pointer-events: none;
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.4s ease;
 }
 
 .cyber-folder:hover .scanline-overlay {
   opacity: 1;
 }
 
+/* Ornamental corner marks — L-shaped precision ticks */
 .corner-accent {
   position: absolute;
-  width: 8px;
-  height: 8px;
   pointer-events: none;
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
 .cyber-folder:hover .corner-accent {
@@ -198,20 +210,41 @@
 }
 
 .corner-accent.top-left {
-  top: 0;
-  left: 0;
-  border-top: 1px solid rgba(var(--cyber-accent-rgb), 0.5);
-  border-left: 1px solid rgba(var(--cyber-accent-rgb), 0.5);
+  top: -1px; left: -1px;
+  width: 14px; height: 14px;
+  border-top: 1.5px solid rgba(var(--cyber-accent-rgb), 0.7);
+  border-left: 1.5px solid rgba(var(--cyber-accent-rgb), 0.7);
 }
 
 .corner-accent.bottom-right {
-  bottom: 0;
-  right: 0;
-  border-bottom: 1px solid rgba(var(--cyber-accent-rgb), 0.5);
-  border-right: 1px solid rgba(var(--cyber-accent-rgb), 0.5);
+  bottom: -1px; right: -1px;
+  width: 14px; height: 14px;
+  border-bottom: 1.5px solid rgba(var(--cyber-accent-rgb), 0.7);
+  border-right: 1.5px solid rgba(var(--cyber-accent-rgb), 0.7);
 }
 
-/* Cyberpunk tech chips */
+/* ── Ornamental section heading with flanking rules ───────────── */
+.section-heading {
+  @apply text-3xl md:text-4xl font-display font-bold tracking-wider uppercase;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.section-heading::before,
+.section-heading::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, rgba(var(--cyber-accent-rgb), 0.4), transparent);
+}
+
+.section-heading::after {
+  background: linear-gradient(to left, rgba(var(--cyber-accent-rgb), 0.4), transparent);
+}
+
+/* Cyber tech chips */
 .cyber-chip {
   padding: 4px 12px;
   font-family: 'Space Mono', monospace;
@@ -230,7 +263,7 @@
   box-shadow: 0 0 10px rgba(var(--cyber-accent-rgb), 0.08);
 }
 
-/* Cyberpunk contact chips */
+/* Contact chips */
 .contact-chip {
   position: relative;
   padding: 12px 24px;
@@ -239,7 +272,7 @@
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: rgba(var(--cyber-accent-rgb), 0.7);
-  background: linear-gradient(160deg, rgba(22, 22, 30, 0.7), rgba(12, 12, 16, 0.9));
+  background: linear-gradient(160deg, rgba(19, 10, 12, 0.7), rgba(10, 6, 8, 0.92));
   border: 1px solid rgba(var(--cyber-accent-rgb), 0.12);
   border-radius: 2px;
   transition: all 0.3s ease;
@@ -254,8 +287,8 @@
     0deg,
     transparent,
     transparent 2px,
-    rgba(var(--cyber-accent-rgb), 0.015) 2px,
-    rgba(var(--cyber-accent-rgb), 0.015) 4px
+    rgba(var(--cyber-accent-rgb), 0.012) 2px,
+    rgba(var(--cyber-accent-rgb), 0.012) 4px
   );
   opacity: 0;
   transition: opacity 0.3s ease;
@@ -270,4 +303,25 @@
   border-color: rgba(var(--cyber-accent-rgb), 0.35);
   box-shadow: 0 0 20px rgba(var(--cyber-accent-rgb), 0.08), inset 0 0 20px rgba(var(--cyber-accent-rgb), 0.02);
   transform: translateY(-2px);
+}
+
+/* ── Vector heart pulse ring (hero) ───────────────────────────── */
+.pulse-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 300px;
+  height: 300px;
+  margin-left: -150px;
+  margin-top: -150px;
+  pointer-events: none;
+  z-index: 5;
+  opacity: 0;
+  will-change: transform, opacity;
+  /* Heart shape via SVG clip - we overlay an SVG instead */
+}
+
+/* Preloader heart draw animation */
+@keyframes draw-heart {
+  to { stroke-dashoffset: 0; }
 }

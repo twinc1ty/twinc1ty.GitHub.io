@@ -7,6 +7,7 @@ const contentRef = ref<HTMLElement>()
 const lettersRef = ref<HTMLElement>()
 const lineRef = ref<HTMLElement>()
 const counterRef = ref<HTMLElement>()
+const heartPathRef = ref<SVGPathElement>()
 
 const progress = ref(0)
 const readyToDismiss = ref(false)
@@ -14,28 +15,36 @@ const enterRef = ref<HTMLElement>()
 
 const { init: initAudio } = useAudio()
 
-// preloader made by claude mostly
 onMounted(() => {
   const start = performance.now()
   const minVisible = 1800
 
-  // Entrance animation
   const tl = gsap.timeline({ defaults: { ease: 'power4.out' } })
 
-  // Letters stagger in with glitch
+  // Heart draws itself first
+  if (heartPathRef.value) {
+    gsap.set(heartPathRef.value, { strokeDasharray: 1000, strokeDashoffset: 1000 })
+    tl.to(heartPathRef.value, {
+      strokeDashoffset: 0,
+      duration: 1.0,
+      ease: 'power2.inOut',
+    }, 0)
+  }
+
+  // Letters stagger in
   tl.from(lettersRef.value!.children, {
     opacity: 0,
     y: 40,
     rotateX: -90,
     stagger: 0.06,
     duration: 0.8,
-  })
+  }, 0.4)
   // Line draws from center
   .from(lineRef.value!, {
     scaleX: 0,
     duration: 0.6,
     ease: 'power2.inOut',
-  }, 0.3)
+  }, 0.6)
   // Counter ticks up
   .to(progress, {
     value: 100,
@@ -46,9 +55,8 @@ onMounted(() => {
         counterRef.value.textContent = `${Math.round(progress.value)}%`
       }
     },
-  }, 0.2)
+  }, 0.5)
 
-  // Wait for fonts + minimum time, then show "click to enter"
   const ready = document.fonts ? document.fonts.ready : Promise.resolve()
   ready.then(() => {
     const elapsed = performance.now() - start
@@ -82,7 +90,6 @@ function dismiss() {
     onComplete: () => { visible.value = false },
   })
 
-  // Content fades and scales
   tl.to(contentRef.value, {
     opacity: 0,
     scale: 0.9,
@@ -90,7 +97,6 @@ function dismiss() {
     duration: 0.4,
     ease: 'power3.in',
   })
-  // Split wipe - two halves slide apart
   .to('.preloader-top', {
     yPercent: -100,
     duration: 0.8,
@@ -113,6 +119,35 @@ function dismiss() {
     <!-- Content overlay -->
     <div ref="contentRef" class="absolute inset-0 flex items-center justify-center z-10">
       <div class="text-center">
+
+        <!-- Self-drawing ornamental diamond -->
+        <div class="flex justify-center mb-6">
+          <svg viewBox="0 0 100 100" fill="none" width="52" height="52">
+            <!-- Outer diamond -->
+            <path
+              ref="heartPathRef"
+              d="M50 4 L96 50 L50 96 L4 50Z"
+              stroke="var(--cyber-accent)"
+              stroke-width="3"
+              stroke-linejoin="round"
+              pathLength="1000"
+            />
+            <!-- Inner square (draws after outer) -->
+            <path
+              d="M50 22 L78 50 L50 78 L22 50Z"
+              stroke="var(--cyber-accent)"
+              stroke-width="2"
+              stroke-opacity="0.45"
+              stroke-linejoin="round"
+            />
+            <!-- Axis ticks -->
+            <line x1="50" y1="0" x2="50" y2="8" stroke="var(--cyber-accent)" stroke-width="2" stroke-opacity="0.4" />
+            <line x1="50" y1="92" x2="50" y2="100" stroke="var(--cyber-accent)" stroke-width="2" stroke-opacity="0.4" />
+            <line x1="0" y1="50" x2="8" y2="50" stroke="var(--cyber-accent)" stroke-width="2" stroke-opacity="0.4" />
+            <line x1="92" y1="50" x2="100" y2="50" stroke="var(--cyber-accent)" stroke-width="2" stroke-opacity="0.4" />
+          </svg>
+        </div>
+
         <!-- Letters -->
         <div
           ref="lettersRef"
