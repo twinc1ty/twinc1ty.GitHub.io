@@ -25,6 +25,7 @@ const tiltHintRef = ref<HTMLElement>()
 const intensity = reactive<Record<Dir, number>>({ top: 0, right: 0, bottom: 0, left: 0 })
 const pulseBoost = ref(0)
 const edgeGlowActive = reactive<Record<Dir, boolean>>({ top: false, right: false, bottom: false, left: false })
+const tiltHintDismissed = ref(false)
 
 function playEdgeGlow(itemIndex: number) {
   const item = itemRefs.value[itemIndex]
@@ -72,6 +73,17 @@ function intensityLoop() {
   updateIntensity()
 
   if (isMobile.value) {
+    // Dismiss hint once real tilt is detected
+    if (!tiltHintDismissed.value && gyroAvailable.value) {
+      const total = intensity.top + intensity.right + intensity.bottom + intensity.left
+      if (total > 0.15) {
+        tiltHintDismissed.value = true
+        if (tiltHintRef.value) {
+          gsap.to(tiltHintRef.value, { opacity: 0, y: 6, duration: 0.4, ease: 'power2.in' })
+        }
+      }
+    }
+
     menuItems.forEach((item, i) => {
       if (intensity[item.position] > 0.7) {
         playEdgeGlow(i)
@@ -298,20 +310,16 @@ function setItemRef(el: any, i: number) {
         <span class="neon-text">twinc1ty</span>
       </h1>
 
-      <!-- Ornamental tagline -->
-      <div ref="taglineRef" class="flex flex-col items-center gap-2 mt-1">
-        <div class="flex items-center gap-3">
-          <span class="block w-6 h-px bg-cyber-accent/30" />
-          <p class="text-[10px] md:text-[11px] text-cyber-muted font-mono tracking-[0.45em] uppercase">
-            Engineering &nbsp;·&nbsp; Art &nbsp;·&nbsp; Literature
-          </p>
-          <span class="block w-6 h-px bg-cyber-accent/30" />
-        </div>
-      </div>
+      <p
+        ref="taglineRef"
+        class="text-sm md:text-base text-cyber-muted font-mono max-w-md mx-auto uppercase"
+      >
+        Engineering, Art & Literature
+      </p>
 
-      <!-- Mobile tilt hint -->
+      <!-- Mobile tilt hint — hidden once user tilts -->
       <div
-        v-if="isMobile"
+        v-if="isMobile && !tiltHintDismissed"
         ref="tiltHintRef"
         class="mt-7 flex flex-col items-center gap-2"
       >
@@ -373,16 +381,10 @@ function setItemRef(el: any, i: number) {
       {{ item.label }}
     </NuxtLink>
 
-    <!-- Version tag — refined with ornamental separator -->
-    <div class="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 flex items-center gap-2">
-      <svg viewBox="0 0 8 8" width="8" height="8" fill="none">
-        <path d="M4 0 L8 4 L4 8 L0 4Z" stroke="rgba(var(--cyber-accent-rgb),0.35)" stroke-width="1" />
-      </svg>
-      <span class="text-[8px] font-mono text-cyber-muted/50 tracking-[0.5em] uppercase">twinc1ty · sys · v2.0</span>
-      <svg viewBox="0 0 8 8" width="8" height="8" fill="none">
-        <path d="M4 0 L8 4 L4 8 L0 4Z" stroke="rgba(var(--cyber-accent-rgb),0.35)" stroke-width="1" />
-      </svg>
-    </div>
+    <!-- Version tag -->
+    <span class="absolute bottom-6 left-1/2 -translate-x-1/2 text-[9px] font-mono text-cyber-muted tracking-[0.4em] uppercase z-10">
+      twinc1ty.sys v2.0
+    </span>
   </section>
 </template>
 

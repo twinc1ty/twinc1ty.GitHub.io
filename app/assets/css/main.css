@@ -223,25 +223,9 @@
   border-right: 1.5px solid rgba(var(--cyber-accent-rgb), 0.7);
 }
 
-/* ── Ornamental section heading with flanking rules ───────────── */
+/* ── Section heading ──────────────────────────────────────────── */
 .section-heading {
   @apply text-3xl md:text-4xl font-display font-bold tracking-wider uppercase;
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.section-heading::before,
-.section-heading::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: linear-gradient(to right, rgba(var(--cyber-accent-rgb), 0.4), transparent);
-}
-
-.section-heading::after {
-  background: linear-gradient(to left, rgba(var(--cyber-accent-rgb), 0.4), transparent);
 }
 
 /* Cyber tech chips */

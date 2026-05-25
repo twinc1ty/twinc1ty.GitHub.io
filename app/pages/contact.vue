@@ -20,7 +20,10 @@ onMounted(() => {
   gsap.from(headingRef.value!, { opacity: 0, y: 30, duration: 0.8, ease: 'power3.out' })
   gsap.from(descRef.value!, { opacity: 0, y: 20, duration: 0.6, delay: 0.15, ease: 'power3.out' })
   if (chipsRef.value) {
-    gsap.from(chipsRef.value.children, { y: 20, scale: 0.9, opacity: 0, stagger: 0.1, duration: 0.5, delay: 0.3, ease: 'power3.out', clearProps: 'transform' })
+    gsap.from(chipsRef.value.children, {
+      y: 20, scale: 0.9, opacity: 0, stagger: 0.1, duration: 0.5,
+      delay: 0.3, ease: 'power3.out', clearProps: 'all',
+    })
   }
 })
 </script>
