@@ -42,8 +42,8 @@ function startFollowLoop() {
     outerY += (mouseY - outerY) * 0.12
 
     if (outerRef.value) {
-      outerRef.value.style.left = `${outerX - 20}px`
-      outerRef.value.style.top = `${outerY - 20}px`
+      outerRef.value.style.left = `${outerX - 14}px`
+      outerRef.value.style.top = `${outerY - 14}px`
     }
 
     rafId = requestAnimationFrame(tick)
@@ -62,14 +62,28 @@ function onMouseUp() {
 
 <template>
   <div v-if="cursorVisible">
-    <div
-      ref="outerRef"
-      class="cursor-outer"
-    />
-    <div
-      ref="dotRef"
-      class="cursor-dot"
-    />
+    <!-- Fine crosshair cursor -->
+    <div ref="outerRef" class="cursor-outer">
+      <svg viewBox="0 0 28 28" width="28" height="28" fill="none" style="display:block">
+        <!-- Horizontal arms with center gap -->
+        <line x1="0" y1="14" x2="10" y2="14" stroke="rgba(var(--cyber-accent-rgb), 0.7)" stroke-width="1" />
+        <line x1="18" y1="14" x2="28" y2="14" stroke="rgba(var(--cyber-accent-rgb), 0.7)" stroke-width="1" />
+        <!-- Vertical arms with center gap -->
+        <line x1="14" y1="0" x2="14" y2="10" stroke="rgba(var(--cyber-accent-rgb), 0.7)" stroke-width="1" />
+        <line x1="14" y1="18" x2="14" y2="28" stroke="rgba(var(--cyber-accent-rgb), 0.7)" stroke-width="1" />
+        <!-- Corner ticks (Printstream-inspired precision marks) -->
+        <line x1="0" y1="0" x2="4" y2="0" stroke="rgba(var(--cyber-accent-rgb), 0.35)" stroke-width="1" />
+        <line x1="0" y1="0" x2="0" y2="4" stroke="rgba(var(--cyber-accent-rgb), 0.35)" stroke-width="1" />
+        <line x1="28" y1="0" x2="24" y2="0" stroke="rgba(var(--cyber-accent-rgb), 0.35)" stroke-width="1" />
+        <line x1="28" y1="0" x2="28" y2="4" stroke="rgba(var(--cyber-accent-rgb), 0.35)" stroke-width="1" />
+        <line x1="0" y1="28" x2="4" y2="28" stroke="rgba(var(--cyber-accent-rgb), 0.35)" stroke-width="1" />
+        <line x1="0" y1="28" x2="0" y2="24" stroke="rgba(var(--cyber-accent-rgb), 0.35)" stroke-width="1" />
+        <line x1="28" y1="28" x2="24" y2="28" stroke="rgba(var(--cyber-accent-rgb), 0.35)" stroke-width="1" />
+        <line x1="28" y1="28" x2="28" y2="24" stroke="rgba(var(--cyber-accent-rgb), 0.35)" stroke-width="1" />
+      </svg>
+    </div>
+    <!-- Center dot -->
+    <div ref="dotRef" class="cursor-dot" />
   </div>
 </template>
 
@@ -83,19 +97,14 @@ function onMouseUp() {
   position: fixed;
   top: 0;
   left: 0;
-  width: 40px;
-  height: 40px;
-  border: 1.5px solid rgba(var(--cyber-accent-rgb), 0.5);
-  border-radius: 50%;
   pointer-events: none;
   z-index: 99998;
-  mix-blend-mode: difference;
+  transition: transform 0.12s ease, opacity 0.12s ease;
 }
 
 .cursor-outer.cursor-active {
-  width: 30px;
-  height: 30px;
-  border-color: rgba(var(--cyber-accent-rgb), 0.8);
+  transform: scale(0.75);
+  opacity: 0.6;
 }
 
 .cursor-dot {
@@ -104,7 +113,7 @@ function onMouseUp() {
   left: 0;
   width: 4px;
   height: 4px;
-  background: #ffffff;
+  background: var(--cyber-accent);
   border-radius: 50%;
   pointer-events: none;
   z-index: 99999;

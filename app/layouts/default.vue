@@ -5,8 +5,7 @@ const isHome = computed(() => route.path === '/')
 
 <template>
   <div class="min-h-screen relative">
-    <ParticleBackground v-if="!isHome" />
-    <Navbar />
+    <VectorHeartBg v-if="!isHome" />
     <main class="relative z-10">
       <slot />
     </main>

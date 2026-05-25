@@ -19,10 +19,11 @@ const nameRef = ref<HTMLElement>()
 const taglineRef = ref<HTMLElement>()
 const lineRef = ref<HTMLElement>()
 const itemRefs = ref<HTMLElement[]>([])
-const pulseRingRef = ref<HTMLElement>()
+const pulseRingRef = ref<SVGElement>()
+const tiltHintRef = ref<HTMLElement>()
 
 const intensity = reactive<Record<Dir, number>>({ top: 0, right: 0, bottom: 0, left: 0 })
-const pulseBoost = ref(0) // 0-1, driven by tap-to-pulse on mobile
+const pulseBoost = ref(0)
 const edgeGlowActive = reactive<Record<Dir, boolean>>({ top: false, right: false, bottom: false, left: false })
 
 function playEdgeGlow(itemIndex: number) {
@@ -58,7 +59,7 @@ function updateIntensity() {
   const dx = nx.value - 0.5
   const dy = ny.value - 0.5
   const dist = Math.sqrt(dx * dx + dy * dy)
-  const power = Math.min(1, dist / 0.3) // 0.3 in normalized space is 300px equivalent
+  const power = Math.min(1, dist / 0.3)
   const angle = Math.atan2(dy, dx)
 
   for (const item of menuItems) {
@@ -70,7 +71,6 @@ let intensityRaf = 0
 function intensityLoop() {
   updateIntensity()
 
-  // Mobile: trigger edge glow when tilting toward a menu item
   if (isMobile.value) {
     menuItems.forEach((item, i) => {
       if (intensity[item.position] > 0.7) {
@@ -89,17 +89,19 @@ function onTapPulse(e: MouseEvent | TouchEvent) {
   if ('touches' in e && e.touches.length) {
     clientX = e.touches[0]!.clientX
     clientY = e.touches[0]!.clientY
-  } else if ('clientX' in e) {
+  }
+  else if ('clientX' in e) {
     clientX = e.clientX
     clientY = e.clientY
-  } else {
+  }
+  else {
     return
   }
 
   if (pulseRingRef.value) {
     const rect = heroRef.value!.getBoundingClientRect()
-    pulseRingRef.value.style.left = `${clientX - rect.left}px`
-    pulseRingRef.value.style.top = `${clientY - rect.top}px`
+    pulseRingRef.value.style.left = `${clientX - rect.left - 100}px`
+    pulseRingRef.value.style.top = `${clientY - rect.top - 100}px`
   }
 
   if (isMobile.value && !gyroAvailable.value) {
@@ -130,19 +132,17 @@ function onTapPulse(e: MouseEvent | TouchEvent) {
 
   if (pulseRingRef.value) {
     gsap.fromTo(pulseRingRef.value, {
-      scale: 0.3,
-      opacity: 0.8,
+      scale: 0.2,
+      opacity: 0.7,
     }, {
-      scale: 2.5,
+      scale: 3,
       opacity: 0,
-      duration: 1.6,
+      duration: 1.8,
       ease: 'power2.out',
     })
   }
 
-  // Clear decay
   if (pulseTimeout) clearTimeout(pulseTimeout)
-
   pulseTimeout = setTimeout(() => {
     gsap.to(pulseBoost, {
       value: 0,
@@ -189,13 +189,34 @@ onMounted(() => {
       duration: 0.6,
     }, 1.2)
 
-  // Neon edge glow: each item's borders trace one by one after intro
-  // Full circle: identity → constructs → logs → signal, then identity again
   const introSequence = [0, 1, 2, 3, 0]
   const introDelay = tl.duration() - 0.2
   introSequence.forEach((itemIndex, i) => {
     setTimeout(() => playEdgeGlow(itemIndex), (introDelay + i * 1) * 1000)
   })
+
+  // Tilt hint: fade in after intro, then run a repeating attention animation
+  if (isMobile.value && tiltHintRef.value) {
+    gsap.set(tiltHintRef.value, { opacity: 0, y: 8 })
+    gsap.to(tiltHintRef.value, {
+      opacity: 1,
+      y: 0,
+      duration: 0.7,
+      ease: 'power2.out',
+      delay: tl.duration() + 0.5,
+    })
+    // Every 4 s: briefly brighten + device icon rocks to demand attention
+    gsap.to(tiltHintRef.value, {
+      opacity: 0.9,
+      scale: 1.06,
+      duration: 0.35,
+      ease: 'power2.inOut',
+      delay: tl.duration() + 3,
+      repeat: -1,
+      repeatDelay: 4,
+      yoyo: true,
+    })
+  }
 })
 
 onUnmounted(() => {
@@ -208,8 +229,7 @@ onUnmounted(() => {
 function getItemStyle(pos: Dir) {
   const val = intensity[pos]
   const mobile = isMobile.value
-  // Mobile: higher base opacity (0.45), pulse boost adds more
-  const baseOpacity = mobile ? 0.45 : 0.18
+  const baseOpacity = mobile ? 0.55 : 0.42
   const boost = mobile ? pulseBoost.value * 0.55 : 0
   const effectiveOpacity = Math.min(1, baseOpacity + val * (1 - baseOpacity) + boost)
 
@@ -235,18 +255,36 @@ function setItemRef(el: any, i: number) {
     class="relative min-h-screen flex items-center justify-center overflow-hidden"
     @click="onTapPulse"
   >
-    <!-- 3D sphere -->
+    <!-- Vector heart 3D scene -->
     <div class="absolute inset-0 z-0">
       <ClientOnly>
-        <ThreeScene :pulse-intensity="pulseBoost" />
+        <VectorHeartScene :pulse-intensity="pulseBoost" />
       </ClientOnly>
     </div>
 
-    <!-- Pulse ring: soft radial gradient that expands outward on tap -->
-    <div
+    <!-- Radial vignette: darkens center so text stays legible -->
+    <div class="absolute inset-0 z-1 pointer-events-none" style="background: radial-gradient(ellipse 48% 52% at 50% 50%, rgba(10,10,10,0.82) 0%, rgba(10,10,10,0.45) 55%, transparent 100%)" />
+
+    <!-- Geometric pulse ring — expanding diamond -->
+    <svg
       ref="pulseRingRef"
-      class="pulse-ring"
-    />
+      class="pulse-heart-ring"
+      viewBox="0 0 100 100"
+      fill="none"
+      width="220"
+      height="220"
+    >
+      <path
+        d="M50 4 L96 50 L50 96 L4 50Z"
+        stroke="rgba(var(--cyber-accent-rgb), 0.35)"
+        stroke-width="1.5"
+      />
+      <path
+        d="M50 18 L82 50 L50 82 L18 50Z"
+        stroke="rgba(var(--cyber-accent-rgb), 0.18)"
+        stroke-width="1"
+      />
+    </svg>
 
     <!-- Hero text -->
     <div class="relative z-10 text-center px-6">
@@ -260,20 +298,60 @@ function setItemRef(el: any, i: number) {
         <span class="neon-text">twinc1ty</span>
       </h1>
 
-      <p
-        ref="taglineRef"
-        class="text-sm md:text-base text-cyber-muted font-mono max-w-md mx-auto uppercase"
-      >
-        Engineering, Art & Literature
-      </p>
+      <!-- Ornamental tagline -->
+      <div ref="taglineRef" class="flex flex-col items-center gap-2 mt-1">
+        <div class="flex items-center gap-3">
+          <span class="block w-6 h-px bg-cyber-accent/30" />
+          <p class="text-[10px] md:text-[11px] text-cyber-muted font-mono tracking-[0.45em] uppercase">
+            Engineering &nbsp;·&nbsp; Art &nbsp;·&nbsp; Literature
+          </p>
+          <span class="block w-6 h-px bg-cyber-accent/30" />
+        </div>
+      </div>
 
-      <!-- Mobile hint -->
-      <p
+      <!-- Mobile tilt hint -->
+      <div
         v-if="isMobile"
-        class="mt-6 text-[9px] font-mono text-cyber-muted/40 tracking-[0.3em] uppercase animate-pulse"
+        ref="tiltHintRef"
+        class="mt-7 flex flex-col items-center gap-2"
       >
-        {{ gyroAvailable ? '[ tilt to explore ]' : '[ tap to reveal ]' }}
-      </p>
+        <!-- Animated device icon -->
+        <svg
+          v-if="gyroAvailable"
+          class="tilt-device"
+          viewBox="0 0 40 64"
+          width="22"
+          height="35"
+          fill="none"
+        >
+          <!-- Phone body -->
+          <rect x="4" y="2" width="32" height="60" rx="5" stroke="var(--cyber-accent)" stroke-width="2" stroke-opacity="0.6" />
+          <!-- Screen -->
+          <rect x="8" y="8" width="24" height="44" rx="2" stroke="var(--cyber-accent)" stroke-width="1" stroke-opacity="0.3" />
+          <!-- Home indicator -->
+          <line x1="15" y1="56" x2="25" y2="56" stroke="var(--cyber-accent)" stroke-width="2" stroke-opacity="0.5" stroke-linecap="round" />
+          <!-- Tilt arrows -->
+          <path d="M0 28 L-6 22 M0 28 L-6 34" stroke="var(--cyber-accent)" stroke-width="1.5" stroke-opacity="0.5" stroke-linecap="round" transform="translate(2,0)" />
+          <path d="M40 28 L46 22 M40 28 L46 34" stroke="var(--cyber-accent)" stroke-width="1.5" stroke-opacity="0.5" stroke-linecap="round" transform="translate(-2,0)" />
+        </svg>
+
+        <!-- Tap icon for non-gyro -->
+        <svg
+          v-else
+          class="tap-hint-icon"
+          viewBox="0 0 40 40"
+          width="24"
+          height="24"
+          fill="none"
+        >
+          <circle cx="20" cy="20" r="16" stroke="var(--cyber-accent)" stroke-width="1.5" stroke-opacity="0.5" />
+          <circle cx="20" cy="20" r="5" fill="var(--cyber-accent)" fill-opacity="0.4" />
+        </svg>
+
+        <span class="text-[9px] font-mono tracking-[0.35em] uppercase" style="color: rgba(var(--cyber-accent-rgb), 0.65)">
+          {{ gyroAvailable ? 'tilt to explore' : 'tap to reveal' }}
+        </span>
+      </div>
     </div>
 
     <!-- Cardinal menu items -->
@@ -295,10 +373,16 @@ function setItemRef(el: any, i: number) {
       {{ item.label }}
     </NuxtLink>
 
-    <!-- Version tag -->
-    <span class="absolute bottom-6 left-1/2 -translate-x-1/2 text-[9px] font-mono text-cyber-muted tracking-[0.4em] uppercase z-10">
-      twinc1ty.sys v2.0
-    </span>
+    <!-- Version tag — refined with ornamental separator -->
+    <div class="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 flex items-center gap-2">
+      <svg viewBox="0 0 8 8" width="8" height="8" fill="none">
+        <path d="M4 0 L8 4 L4 8 L0 4Z" stroke="rgba(var(--cyber-accent-rgb),0.35)" stroke-width="1" />
+      </svg>
+      <span class="text-[8px] font-mono text-cyber-muted/50 tracking-[0.5em] uppercase">twinc1ty · sys · v2.0</span>
+      <svg viewBox="0 0 8 8" width="8" height="8" fill="none">
+        <path d="M4 0 L8 4 L4 8 L0 4Z" stroke="rgba(var(--cyber-accent-rgb),0.35)" stroke-width="1" />
+      </svg>
+    </div>
   </section>
 </template>
 
@@ -324,100 +408,57 @@ function setItemRef(el: any, i: number) {
   pointer-events: none;
 }
 
-.edge-top {
-  top: 0; left: 0; right: 0; height: 2px;
-}
+.edge-top    { top: 0; left: 0; right: 0; height: 2px; }
+.edge-right  { top: 0; right: 0; bottom: 0; width: 2px; }
+.edge-bottom { bottom: 0; left: 0; right: 0; height: 2px; }
+.edge-left   { top: 0; left: 0; bottom: 0; width: 2px; }
 
-.edge-right {
-  top: 0; right: 0; bottom: 0; width: 2px;
-}
+/* Desktop: cardinal */
+.echo-top    { top: 16%; left: 50%; transform: translateX(-50%); }
+.echo-right  { top: 50%; right: 8%; transform: translateY(-50%); }
+.echo-bottom { bottom: 16%; left: 50%; transform: translateX(-50%); }
+.echo-left   { top: 50%; left: 8%; transform: translateY(-50%); }
 
-.edge-bottom {
-  bottom: 0; left: 0; right: 0; height: 2px;
-}
-
-.edge-left {
-  top: 0; left: 0; bottom: 0; width: 2px;
-}
-
-/* Desktop: cardinal directions */
-.echo-top {
-  top: 16%;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.echo-right {
-  top: 50%;
-  right: 8%;
-  transform: translateY(-50%);
-}
-
-.echo-bottom {
-  bottom: 16%;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.echo-left {
-  top: 50%;
-  left: 8%;
-  transform: translateY(-50%);
-}
-
-/* Mobile: shift to corners to avoid overlapping hero text */
+/* Mobile: corners */
 @media (max-width: 768px) {
-  .echo-item {
-    font-size: 0.8rem;
-  }
-
-  .echo-top {
-    top: 12%;
-    left: 50%;
-    transform: translateX(-50%);
-  }
-
-  .echo-right {
-    top: auto;
-    bottom: 22%;
-    right: 6%;
-    transform: none;
-  }
-
-  .echo-bottom {
-    bottom: 12%;
-    left: 50%;
-    transform: translateX(-50%);
-  }
-
-  .echo-left {
-    top: auto;
-    bottom: 22%;
-    left: 6%;
-    transform: none;
-  }
+  .echo-item   { font-size: 0.8rem; }
+  .echo-top    { top: 12%; left: 50%; transform: translateX(-50%); }
+  .echo-right  { top: auto; bottom: 22%; right: 6%; transform: none; }
+  .echo-bottom { bottom: 12%; left: 50%; transform: translateX(-50%); }
+  .echo-left   { top: auto; bottom: 22%; left: 6%; transform: none; }
 }
 
-/* Soft radial gradient pulse ring */
-.pulse-ring {
+/* Tilt device icon — rocks left/right to demonstrate the gesture */
+.tilt-device {
+  animation: tilt-rock 2.8s ease-in-out infinite;
+  transform-origin: center bottom;
+}
+
+@keyframes tilt-rock {
+  0%, 100% { transform: rotate(0deg); }
+  20%       { transform: rotate(-18deg); }
+  50%       { transform: rotate(0deg); }
+  70%       { transform: rotate(18deg); }
+  90%       { transform: rotate(0deg); }
+}
+
+/* Tap hint ripple */
+.tap-hint-icon {
+  animation: tap-pulse 2.2s ease-in-out infinite;
+}
+
+@keyframes tap-pulse {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50%       { opacity: 1;   transform: scale(1.15); }
+}
+
+/* Geometric pulse ring */
+.pulse-heart-ring {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 300px;
-  height: 300px;
-  margin-left: -150px;
-  margin-top: -150px;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle,
-    transparent 30%,
-    rgba(var(--cyber-accent-rgb), 0.25) 50%,
-    rgba(var(--cyber-accent-rgb), 0.12) 65%,
-    transparent 85%
-  );
   pointer-events: none;
   z-index: 5;
   opacity: 0;
   will-change: transform, opacity;
+  transform-origin: center center;
 }
 </style>

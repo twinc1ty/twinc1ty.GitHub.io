@@ -5,28 +5,28 @@ const isHome = computed(() => route.path === '/')
 
 <template>
   <template v-if="!isHome">
+    <!-- Wordmark — left -->
     <NuxtLink
       to="/"
-      class="fixed top-6 left-6 z-[60] text-[10px] font-mono text-cyber-muted/60 hover:text-cyber-accent transition-colors duration-300 tracking-[0.3em] uppercase"
+      class="fixed top-6 left-6 z-[60] flex items-center gap-2 group"
     >
-      twinc1ty
+      <svg viewBox="0 0 10 10" width="8" height="8" fill="none" class="opacity-40 group-hover:opacity-80 transition-opacity duration-300">
+        <path d="M5 0 L10 5 L5 10 L0 5Z" stroke="rgba(var(--cyber-accent-rgb),1)" stroke-width="1.5" />
+      </svg>
+      <span class="text-[9px] font-mono text-cyber-muted/55 group-hover:text-cyber-accent transition-colors duration-300 tracking-[0.4em] uppercase">twinc1ty</span>
     </NuxtLink>
 
+    <!-- Back link — right -->
     <NuxtLink
       to="/"
       class="fixed top-6 right-6 z-[60] group flex items-center gap-2"
     >
-      <span class="text-[10px] font-mono text-cyber-muted uppercase tracking-[0.3em] group-hover:text-cyber-accent transition-colors duration-300">
-        back
+      <span class="text-[9px] font-mono text-cyber-muted/55 uppercase tracking-[0.35em] group-hover:text-cyber-accent transition-colors duration-300">
+        home
       </span>
-      <svg
-        class="w-3 h-3 text-cyber-muted/60 group-hover:text-cyber-accent transition-colors duration-300 rotate-180"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-      >
-        <path d="M5 12h14M12 5l7 7-7 7" />
+      <!-- Small diamond separator -->
+      <svg viewBox="0 0 8 8" width="6" height="6" fill="none" class="opacity-30 group-hover:opacity-70 transition-opacity duration-300">
+        <path d="M4 0 L8 4 L4 8 L0 4Z" stroke="rgba(var(--cyber-accent-rgb),1)" stroke-width="1" />
       </svg>
     </NuxtLink>
   </template>

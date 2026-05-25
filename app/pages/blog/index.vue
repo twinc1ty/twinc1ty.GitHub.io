@@ -18,25 +18,28 @@ const { data: posts } = await useAsyncData('blog-list', () =>
 onMounted(() => {
   if (cardsRef.value) {
     gsap.from(cardsRef.value.children, {
-      opacity: 0,
-      y: 50,
-      scale: 0.92,
-      rotateX: 8,
-      stagger: 0.12,
-      duration: 0.7,
-      ease: 'power3.out',
-      clearProps: 'transform',
+      opacity: 0, y: 50, scale: 0.94, stagger: 0.1, duration: 0.65, ease: 'power3.out', clearProps: 'transform',
     })
   }
 })
 </script>
 
 <template>
-  <div class="pt-16 pb-16 px-6 min-h-screen">
+  <div class="pt-20 pb-20 px-6 min-h-screen">
     <div class="max-w-4xl mx-auto">
-      <h1 class="section-heading neon-text mb-12">/logs</h1>
 
-      <div ref="cardsRef" class="space-y-6" style="perspective: 1000px">
+      <div class="mb-12">
+        <div class="flex items-center gap-3 mb-2">
+          <svg viewBox="0 0 10 10" width="10" height="10" fill="none">
+            <path d="M5 0 L10 5 L5 10 L0 5Z" stroke="rgba(var(--cyber-accent-rgb),0.6)" stroke-width="1" />
+          </svg>
+          <span class="text-[9px] font-mono text-cyber-muted/50 tracking-[0.45em] uppercase">sys://logs</span>
+        </div>
+        <h1 class="section-heading neon-text">/logs</h1>
+        <div class="mt-3 h-px w-full" style="background: linear-gradient(to right, rgba(var(--cyber-accent-rgb),0.4), transparent)" />
+      </div>
+
+      <div ref="cardsRef" class="space-y-5" style="perspective: 1000px">
         <BlogCard
           v-for="(post, i) in posts"
           :key="post.path"
