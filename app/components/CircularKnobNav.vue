@@ -211,7 +211,7 @@ onBeforeUnmount(() => {
 .knob-plate__divider {
   height: 1px;
   background: #e1daf5;
-  margin: 0 -0.2rem;
+  margin: 0.65rem -0.2rem;
 }
 
 .knob-plate__screw {
@@ -463,12 +463,16 @@ onBeforeUnmount(() => {
   .knob-plate__body {
     display: flex;
     flex-direction: column;
-    gap: 0.85rem;
+    gap: 1.1rem;
     padding: 0 1.1rem 1rem;
   }
 
   .knob-plate__body.is-collapsed {
     display: none;
+  }
+
+  .knob-plate__divider {
+    margin: 0 -0.2rem;
   }
 
   .knob-nav {

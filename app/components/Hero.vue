@@ -7,19 +7,12 @@ const line1Ref = ref<HTMLElement>()
 const line2Ref = ref<HTMLElement>()
 const subRef = ref<HTMLElement>()
 const hintRef = ref<HTMLElement>()
-const blockRef = ref<HTMLElement>()
 const statusRef = ref<HTMLElement>()
 
 onMounted(() => {
   const tl = gsap.timeline({ defaults: { ease: 'power3.out' } })
 
-  tl.from(blockRef.value!, {
-    scaleY: 0,
-    duration: 0.7,
-    ease: 'power4.inOut',
-    transformOrigin: 'bottom',
-  })
-    .from(eyebrowRef.value!, { opacity: 0, y: 16, duration: 0.5 }, 0.3)
+  tl.from(eyebrowRef.value!, { opacity: 0, y: 16, duration: 0.5 })
     .from(line1Ref.value!, { opacity: 0, y: 36, duration: 0.65 }, 0.42)
     .from(line2Ref.value!, { opacity: 0, y: 36, duration: 0.65 }, 0.52)
     .from(subRef.value!, { opacity: 0, y: 20, duration: 0.5 }, 0.68)
@@ -34,10 +27,8 @@ onMounted(() => {
 
     <div class="hero__grid grid grid-cols-1 min-[900px]:grid-cols-[1.4fr_1fr] gap-16 items-center max-w-[78rem] w-full mx-auto">
       <div class="hero__copy">
-        <div ref="blockRef" class="hero__block" />
-
         <p ref="eyebrowRef" class="hero__eyebrow">
-          <span class="hero__eyebrow-mark">twinc1ty</span> — Computer Science Engineer, Senior SDE
+          Computer Science Engineer, Senior SDE
         </p>
 
         <h1 class="hero__name">
@@ -108,17 +99,6 @@ onMounted(() => {
   position: relative;
 }
 
-.hero__block {
-  position: absolute;
-  top: -3.75rem;
-  left: -1.25rem;
-  width: 3.25rem;
-  height: 3.25rem;
-  background: #5b21e0;
-  z-index: 0;
-}
-
-
 .hero__eyebrow {
   position: relative;
   z-index: 1;
@@ -128,12 +108,6 @@ onMounted(() => {
   text-transform: uppercase;
   color: #8a84a0;
   margin-bottom: 1.25rem;
-}
-
-.hero__eyebrow-mark {
-  color: #5b21e0;
-  font-weight: 700;
-  letter-spacing: 0.05em;
 }
 
 .hero__name {
