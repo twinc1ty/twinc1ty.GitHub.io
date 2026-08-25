@@ -2,33 +2,34 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Default fallback values — vector-heart theme (overridden by useTheme at runtime) */
+/* Default fallback values — flat deck theme (overridden by useTheme at runtime) */
 :root {
-  --cyber-dark: #0a0a0a;
-  --cyber-darker: #050505;
-  --cyber-surface: #111111;
-  --cyber-surface-light: #1a1a1a;
-  --cyber-accent: #f0ede8;
-  --cyber-accent-rgb: 240, 237, 232;
-  --cyber-accent-dim: #f0ede833;
-  --cyber-secondary: #c41e3a;
-  --cyber-secondary-rgb: 196, 30, 58;
-  --cyber-muted: #888880;
-  --cyber-text: #f0ede8;
-  --cyber-text-dim: #a8a4a0;
-  --cyber-subtle: #333333;
+  --cyber-dark: #fafaf7;
+  --cyber-darker: #ffffff;
+  --cyber-surface: #f1edfb;
+  --cyber-surface-light: #ffffff;
+  --cyber-accent: #5b21e0;
+  --cyber-accent-rgb: 91, 33, 224;
+  --cyber-accent-dim: #5b21e033;
+  --cyber-secondary: #0b0a0e;
+  --cyber-secondary-rgb: 11, 10, 14;
+  --cyber-muted: #8a84a0;
+  --cyber-text: #0b0a0e;
+  --cyber-text-dim: #34313c;
+  --cyber-subtle: #e1daf5;
+  --footer-h: 45px;
 }
 
 @layer base {
   body {
     background-color: var(--cyber-dark);
     color: var(--cyber-text-dim);
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Manrope', sans-serif;
   }
 
   ::selection {
-    background-color: rgba(var(--cyber-accent-rgb), 0.2);
-    color: #ffffff;
+    background-color: rgba(var(--cyber-accent-rgb), 0.22);
+    color: var(--cyber-text);
   }
 
   ::-webkit-scrollbar {
@@ -41,44 +42,42 @@
 
   ::-webkit-scrollbar-thumb {
     background-color: var(--cyber-subtle);
-    border-radius: 9999px;
+    border-radius: 0;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background-color: rgba(var(--cyber-accent-rgb), 0.4);
+    background-color: rgba(var(--cyber-accent-rgb), 0.5);
   }
 }
 
 @layer components {
   .neon-text {
     color: var(--cyber-accent);
-    text-shadow: 0 0 14px rgba(var(--cyber-accent-rgb), 0.22);
+    text-shadow: none;
   }
 
   .neon-text-secondary {
     color: var(--cyber-secondary);
-    text-shadow: 0 0 14px rgba(var(--cyber-secondary-rgb), 0.22);
+    text-shadow: none;
   }
 
   .neon-border {
-    border: 1px solid rgba(var(--cyber-accent-rgb), 0.15);
-    box-shadow: 0 0 8px rgba(var(--cyber-accent-rgb), 0.07);
+    border: 2px solid var(--cyber-text);
+    box-shadow: none;
   }
 
   .neon-border:hover {
-    border-color: rgba(var(--cyber-accent-rgb), 0.35);
-    box-shadow: 0 0 12px rgba(var(--cyber-accent-rgb), 0.13);
+    border-color: var(--cyber-accent);
   }
 
   .section-heading {
-    @apply text-3xl md:text-4xl font-display font-bold tracking-wider uppercase;
+    @apply text-3xl md:text-4xl font-display font-black tracking-wider uppercase;
   }
 
   .glass-panel {
-    background-color: rgba(19, 10, 12, 0.55);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.03);
-    border-radius: 0.5rem;
+    background-color: var(--cyber-surface-light);
+    border: 2px solid var(--cyber-text);
+    border-radius: 0;
   }
 }
 
@@ -127,100 +126,55 @@
   95%, 100% { transform: translate(0); }
 }
 
-/* ── Ornamental panels — vector-art engraved aesthetic ─────────── */
-.cyber-folder {
+/* ── Page header block — kicker / big title / rule ──────────────── */
+.page-shell {
+  min-height: 100vh;
+  padding: 8rem 1.5rem 6rem;
+  background: var(--cyber-dark);
+}
+
+.page-kicker {
+  font-family: '"IBM Plex Mono"', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--cyber-accent);
+  margin-bottom: 0.75rem;
+}
+
+.page-title {
+  font-family: 'Archivo', sans-serif;
+  font-weight: 900;
+  font-size: clamp(2.75rem, 8vw, 5.5rem);
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: var(--cyber-text);
+  margin: 0 0 1.25rem;
+}
+
+.page-rule {
+  width: 4rem;
+  height: 4px;
+  background: var(--cyber-accent);
+  transform-origin: left;
+}
+
+/* ── Deck card — flat bordered panel with a static hard-edge shadow ── */
+.deck-card {
   position: relative;
-  transition: transform 0.35s ease;
+  display: block;
+  background: var(--cyber-surface-light);
+  border: 2px solid var(--cyber-text);
+  padding: 1.5rem;
+  box-shadow: 6px 6px 0 rgba(11, 10, 14, 0.07);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
-.cyber-folder:hover {
-  transform: translateY(-3px);
-}
-
-/* Folder tab — thin monospace label with left accent line */
-.folder-tab {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 3px 12px 3px 10px;
-  margin-left: 0;
-  border-radius: 0;
-  background: transparent;
-  border: none;
-}
-
-.folder-tab::before {
-  content: '';
-  display: inline-block;
-  width: 12px;
-  height: 1px;
-  background: rgba(var(--cyber-accent-rgb), 0.5);
-}
-
-/* Main panel body — clean dark surface with precision border */
-.folder-body {
-  position: relative;
-  background: linear-gradient(145deg, rgba(14, 14, 14, 0.92) 0%, rgba(8, 8, 8, 0.96) 100%);
-  border: 1px solid rgba(var(--cyber-accent-rgb), 0.14);
-  border-radius: 0;
-  padding: 1.4rem;
-  backdrop-filter: blur(10px);
-  overflow: hidden;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.cyber-folder:hover .folder-body {
-  border-color: rgba(var(--cyber-accent-rgb), 0.32);
-  box-shadow:
-    0 0 0 1px rgba(var(--cyber-accent-rgb), 0.06),
-    0 8px 32px rgba(0, 0, 0, 0.4);
-}
-
-/* Fine diagonal engraving texture — replaces scanlines */
-.scanline-overlay {
-  position: absolute;
-  inset: 0;
-  background-image: repeating-linear-gradient(
-    45deg,
-    transparent,
-    transparent 3px,
-    rgba(var(--cyber-accent-rgb), 0.008) 3px,
-    rgba(var(--cyber-accent-rgb), 0.008) 4px
-  );
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.4s ease;
-}
-
-.cyber-folder:hover .scanline-overlay {
-  opacity: 1;
-}
-
-/* Ornamental corner marks — L-shaped precision ticks */
-.corner-accent {
-  position: absolute;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.3s ease, transform 0.3s ease;
-}
-
-.cyber-folder:hover .corner-accent {
-  opacity: 1;
-}
-
-.corner-accent.top-left {
-  top: -1px; left: -1px;
-  width: 14px; height: 14px;
-  border-top: 1.5px solid rgba(var(--cyber-accent-rgb), 0.7);
-  border-left: 1.5px solid rgba(var(--cyber-accent-rgb), 0.7);
-}
-
-.corner-accent.bottom-right {
-  bottom: -1px; right: -1px;
-  width: 14px; height: 14px;
-  border-bottom: 1.5px solid rgba(var(--cyber-accent-rgb), 0.7);
-  border-right: 1.5px solid rgba(var(--cyber-accent-rgb), 0.7);
+.deck-card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 9px 9px 0 rgba(var(--cyber-accent-rgb), 0.22);
+  border-color: var(--cyber-accent);
 }
 
 /* ── Section heading ──────────────────────────────────────────── */
@@ -228,65 +182,47 @@
   @apply text-3xl md:text-4xl font-display font-bold tracking-wider uppercase;
 }
 
-/* Cyber tech chips */
+/* Cyber tech chips — flat squared tags */
 .cyber-chip {
   padding: 4px 12px;
-  font-family: 'Space Mono', monospace;
+  font-family: '"IBM Plex Mono"', monospace;
   font-size: 11px;
-  color: rgba(var(--cyber-accent-rgb), 0.7);
-  background: linear-gradient(135deg, rgba(var(--cyber-accent-rgb), 0.06), rgba(var(--cyber-accent-rgb), 0.02));
-  border: 1px solid rgba(var(--cyber-accent-rgb), 0.1);
-  border-radius: 2px;
+  color: var(--cyber-text);
+  background: var(--cyber-surface-light);
+  border: 1.5px solid var(--cyber-text);
+  border-radius: 0;
   position: relative;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
 }
 
 .cyber-chip:hover {
-  color: rgba(var(--cyber-accent-rgb), 0.9);
-  border-color: rgba(var(--cyber-accent-rgb), 0.3);
-  box-shadow: 0 0 10px rgba(var(--cyber-accent-rgb), 0.08);
+  color: var(--cyber-accent);
+  border-color: var(--cyber-accent);
+  background: var(--cyber-surface);
 }
 
-/* Contact chips */
+/* Contact chips — flat squared buttons, invert on hover */
 .contact-chip {
   position: relative;
   padding: 12px 24px;
-  font-family: 'Space Mono', monospace;
+  font-family: '"IBM Plex Mono"', monospace;
   font-size: 11px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: rgba(var(--cyber-accent-rgb), 0.7);
-  background: linear-gradient(160deg, rgba(19, 10, 12, 0.7), rgba(10, 6, 8, 0.92));
-  border: 1px solid rgba(var(--cyber-accent-rgb), 0.12);
-  border-radius: 2px;
-  transition: all 0.3s ease;
+  color: var(--cyber-text);
+  background: var(--cyber-surface-light);
+  border: 2px solid var(--cyber-text);
+  border-radius: 0;
+  transition: all 0.2s ease;
   overflow: hidden;
 }
 
-.contact-chip::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 2px,
-    rgba(var(--cyber-accent-rgb), 0.012) 2px,
-    rgba(var(--cyber-accent-rgb), 0.012) 4px
-  );
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.contact-chip:hover::before {
-  opacity: 1;
-}
-
 .contact-chip:hover {
-  color: rgba(var(--cyber-accent-rgb), 0.95);
-  border-color: rgba(var(--cyber-accent-rgb), 0.35);
-  box-shadow: 0 0 20px rgba(var(--cyber-accent-rgb), 0.08), inset 0 0 20px rgba(var(--cyber-accent-rgb), 0.02);
-  transform: translateY(-2px);
+  color: #ffffff;
+  background: var(--cyber-accent);
+  border-color: var(--cyber-accent);
+  transform: translate(-2px, -2px);
+  box-shadow: 3px 3px 0 var(--cyber-text);
 }
 
 /* ── Vector heart pulse ring (hero) ───────────────────────────── */

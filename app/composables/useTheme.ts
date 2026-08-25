@@ -40,21 +40,21 @@ function darken(hex: string, amount: number): string {
 }
 
 const themes: ColorTheme[] = [
-  // Vector Heart — Printstream-inspired (default) — white on black
+  // Flat deck — white / violet / ink (default)
   {
-    name: 'vector-heart',
-    dark: '#0a0a0a',
-    darker: '#050505',
-    surface: '#111111',
-    surfaceLight: '#1a1a1a',
-    accent: '#f0ede8',
-    accentRgb: hexToRgb('#f0ede8'),
-    secondary: '#c41e3a',
-    secondaryRgb: hexToRgb('#c41e3a'),
-    muted: '#888880',
-    text: '#f0ede8',
-    textDim: '#a8a4a0',
-    subtle: '#333333',
+    name: 'flat-deck',
+    dark: '#fafaf7',
+    darker: '#ffffff',
+    surface: '#f1edfb',
+    surfaceLight: '#ffffff',
+    accent: '#5b21e0',
+    accentRgb: hexToRgb('#5b21e0'),
+    secondary: '#0b0a0e',
+    secondaryRgb: hexToRgb('#0b0a0e'),
+    muted: '#8a84a0',
+    text: '#0b0a0e',
+    textDim: '#34313c',
+    subtle: '#e1daf5',
   },
   // Cyber Blue
   {

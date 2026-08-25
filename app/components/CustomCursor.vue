@@ -66,20 +66,20 @@ function onMouseUp() {
     <div ref="outerRef" class="cursor-outer">
       <svg viewBox="0 0 28 28" width="28" height="28" fill="none" style="display:block">
         <!-- Horizontal arms with center gap -->
-        <line x1="0" y1="14" x2="10" y2="14" stroke="rgba(var(--cyber-accent-rgb), 0.7)" stroke-width="1" />
-        <line x1="18" y1="14" x2="28" y2="14" stroke="rgba(var(--cyber-accent-rgb), 0.7)" stroke-width="1" />
+        <line x1="0" y1="14" x2="10" y2="14" stroke="rgba(255, 255, 255, 0.95)" stroke-width="1" />
+        <line x1="18" y1="14" x2="28" y2="14" stroke="rgba(255, 255, 255, 0.95)" stroke-width="1" />
         <!-- Vertical arms with center gap -->
-        <line x1="14" y1="0" x2="14" y2="10" stroke="rgba(var(--cyber-accent-rgb), 0.7)" stroke-width="1" />
-        <line x1="14" y1="18" x2="14" y2="28" stroke="rgba(var(--cyber-accent-rgb), 0.7)" stroke-width="1" />
+        <line x1="14" y1="0" x2="14" y2="10" stroke="rgba(255, 255, 255, 0.95)" stroke-width="1" />
+        <line x1="14" y1="18" x2="14" y2="28" stroke="rgba(255, 255, 255, 0.95)" stroke-width="1" />
         <!-- Corner ticks (Printstream-inspired precision marks) -->
-        <line x1="0" y1="0" x2="4" y2="0" stroke="rgba(var(--cyber-accent-rgb), 0.35)" stroke-width="1" />
-        <line x1="0" y1="0" x2="0" y2="4" stroke="rgba(var(--cyber-accent-rgb), 0.35)" stroke-width="1" />
-        <line x1="28" y1="0" x2="24" y2="0" stroke="rgba(var(--cyber-accent-rgb), 0.35)" stroke-width="1" />
-        <line x1="28" y1="0" x2="28" y2="4" stroke="rgba(var(--cyber-accent-rgb), 0.35)" stroke-width="1" />
-        <line x1="0" y1="28" x2="4" y2="28" stroke="rgba(var(--cyber-accent-rgb), 0.35)" stroke-width="1" />
-        <line x1="0" y1="28" x2="0" y2="24" stroke="rgba(var(--cyber-accent-rgb), 0.35)" stroke-width="1" />
-        <line x1="28" y1="28" x2="24" y2="28" stroke="rgba(var(--cyber-accent-rgb), 0.35)" stroke-width="1" />
-        <line x1="28" y1="28" x2="28" y2="24" stroke="rgba(var(--cyber-accent-rgb), 0.35)" stroke-width="1" />
+        <line x1="0" y1="0" x2="4" y2="0" stroke="rgba(255, 255, 255, 0.6)" stroke-width="1" />
+        <line x1="0" y1="0" x2="0" y2="4" stroke="rgba(255, 255, 255, 0.6)" stroke-width="1" />
+        <line x1="28" y1="0" x2="24" y2="0" stroke="rgba(255, 255, 255, 0.6)" stroke-width="1" />
+        <line x1="28" y1="0" x2="28" y2="4" stroke="rgba(255, 255, 255, 0.6)" stroke-width="1" />
+        <line x1="0" y1="28" x2="4" y2="28" stroke="rgba(255, 255, 255, 0.6)" stroke-width="1" />
+        <line x1="0" y1="28" x2="0" y2="24" stroke="rgba(255, 255, 255, 0.6)" stroke-width="1" />
+        <line x1="28" y1="28" x2="24" y2="28" stroke="rgba(255, 255, 255, 0.6)" stroke-width="1" />
+        <line x1="28" y1="28" x2="28" y2="24" stroke="rgba(255, 255, 255, 0.6)" stroke-width="1" />
       </svg>
     </div>
     <!-- Center dot -->
@@ -99,6 +99,7 @@ function onMouseUp() {
   left: 0;
   pointer-events: none;
   z-index: 99998;
+  mix-blend-mode: difference;
   transition: transform 0.12s ease, opacity 0.12s ease;
 }
 
@@ -113,10 +114,11 @@ function onMouseUp() {
   left: 0;
   width: 4px;
   height: 4px;
-  background: var(--cyber-accent);
+  background: #ffffff;
   border-radius: 50%;
   pointer-events: none;
   z-index: 99999;
+  mix-blend-mode: difference;
 }
 
 /* Restore cursor on touch devices */

@@ -120,38 +120,29 @@ function dismiss() {
     <div ref="contentRef" class="absolute inset-0 flex items-center justify-center z-10">
       <div class="text-center">
 
-        <!-- Self-drawing ornamental diamond -->
+        <!-- Self-drawing concentric dial mark -->
         <div class="flex justify-center mb-6">
           <svg viewBox="0 0 100 100" fill="none" width="52" height="52">
-            <!-- Outer diamond -->
-            <path
+            <!-- Outer ring (draws in) -->
+            <circle
               ref="heartPathRef"
-              d="M50 4 L96 50 L50 96 L4 50Z"
+              cx="50" cy="50" r="46"
               stroke="var(--cyber-accent)"
               stroke-width="3"
-              stroke-linejoin="round"
               pathLength="1000"
             />
-            <!-- Inner square (draws after outer) -->
-            <path
-              d="M50 22 L78 50 L50 78 L22 50Z"
-              stroke="var(--cyber-accent)"
-              stroke-width="2"
-              stroke-opacity="0.45"
-              stroke-linejoin="round"
-            />
-            <!-- Axis ticks -->
-            <line x1="50" y1="0" x2="50" y2="8" stroke="var(--cyber-accent)" stroke-width="2" stroke-opacity="0.4" />
-            <line x1="50" y1="92" x2="50" y2="100" stroke="var(--cyber-accent)" stroke-width="2" stroke-opacity="0.4" />
-            <line x1="0" y1="50" x2="8" y2="50" stroke="var(--cyber-accent)" stroke-width="2" stroke-opacity="0.4" />
-            <line x1="92" y1="50" x2="100" y2="50" stroke="var(--cyber-accent)" stroke-width="2" stroke-opacity="0.4" />
+            <!-- Inner rings -->
+            <circle cx="50" cy="50" r="32" stroke="var(--cyber-accent)" stroke-width="2" stroke-opacity="0.4" />
+            <circle cx="50" cy="50" r="18" stroke="var(--cyber-text)" stroke-width="2" stroke-opacity="0.7" />
+            <!-- Notch -->
+            <line x1="50" y1="4" x2="50" y2="16" stroke="var(--cyber-accent)" stroke-width="3" stroke-linecap="round" />
           </svg>
         </div>
 
         <!-- Letters -->
         <div
           ref="lettersRef"
-          class="flex items-center justify-center gap-[0.08em] text-3xl md:text-5xl font-display font-black tracking-[0.3em] uppercase text-white"
+          class="flex items-center justify-center gap-[0.08em] text-3xl md:text-5xl font-display font-black tracking-[0.3em] uppercase text-cyber-text"
           style="perspective: 600px"
         >
           <span v-for="(letter, i) in 'twinc1ty'.split('')" :key="i" class="inline-block">

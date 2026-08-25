@@ -6,36 +6,36 @@ useSeoMeta({
   description: 'Projects and repositories',
 })
 
+const headingRef = ref<HTMLElement>()
+const ruleRef = ref<HTMLElement>()
 const cardsRef = ref<HTMLElement>()
 
 import projectData from '../../public/data/projects.json'
 const repos = computed(() => projectData?.repos || [])
 
 onMounted(() => {
+  const tl = gsap.timeline({ defaults: { ease: 'power3.out' } })
+  tl.from(headingRef.value!, { opacity: 0, y: 30, duration: 0.7, clearProps: 'all' })
+    .from(ruleRef.value!, { scaleX: 0, duration: 0.5, ease: 'power4.inOut' }, 0.25)
+
   if (cardsRef.value) {
-    gsap.from(cardsRef.value.children, {
-      opacity: 0, y: 50, scale: 0.94, stagger: 0.1, duration: 0.65, ease: 'power3.out', clearProps: 'transform',
-    })
+    tl.from(cardsRef.value.children, {
+      opacity: 0, y: 40, stagger: 0.08, duration: 0.55, ease: 'power3.out', clearProps: 'all',
+    }, 0.35)
   }
 })
 </script>
 
 <template>
-  <div class="pt-20 pb-20 px-6 min-h-screen">
+  <div class="page-shell">
     <div class="max-w-6xl mx-auto">
-
       <div class="mb-12">
-        <div class="flex items-center gap-3 mb-2">
-          <svg viewBox="0 0 10 10" width="10" height="10" fill="none">
-            <path d="M5 0 L10 5 L5 10 L0 5Z" stroke="rgba(var(--cyber-accent-rgb),0.6)" stroke-width="1" />
-          </svg>
-          <span class="text-[9px] font-mono text-cyber-muted/50 tracking-[0.45em] uppercase">sys://constructs</span>
-        </div>
-        <h1 class="section-heading neon-text">/constructs</h1>
-        <div class="mt-3 h-px w-full" style="background: linear-gradient(to right, rgba(var(--cyber-accent-rgb),0.4), transparent)" />
+        <p class="page-kicker">Constructs</p>
+        <h1 ref="headingRef" class="page-title">Work</h1>
+        <div ref="ruleRef" class="page-rule" />
       </div>
 
-      <div ref="cardsRef" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5" style="perspective: 1000px">
+      <div ref="cardsRef" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <ProjectCard
           v-for="(repo, i) in repos"
           :key="repo.name"

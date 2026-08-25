@@ -25,13 +25,13 @@ function formatDate(dateStr: string) {
     <article v-if="post" class="max-w-3xl mx-auto">
       <NuxtLink
         to="/blog"
-        class="inline-flex items-center gap-1 text-sm font-mono text-cyber-subtle hover:text-cyber-accent transition-colors mb-8"
+        class="inline-flex items-center gap-1 text-xs font-mono uppercase tracking-widest text-cyber-accent hover:text-cyber-text transition-colors mb-10"
       >
         &larr; Back to blog
       </NuxtLink>
 
       <header class="mb-12">
-        <h1 class="text-3xl md:text-5xl font-bold text-cyber-text mb-4" style="font-family: 'Inter', 'Space Grotesk', sans-serif;">
+        <h1 class="text-3xl md:text-5xl font-black text-cyber-text mb-4 uppercase tracking-tight" style="font-family: 'Archivo', sans-serif;">
           {{ post.title }}
         </h1>
         <div class="flex items-center gap-4 text-sm text-cyber-subtle font-mono">
@@ -41,7 +41,7 @@ function formatDate(dateStr: string) {
           <span
             v-for="tag in post.tags"
             :key="tag"
-            class="px-2 py-0.5 text-xs font-mono text-cyber-secondary/60 bg-cyber-secondary/5 border border-cyber-secondary/10 rounded"
+            class="px-2 py-0.5 text-xs font-mono text-cyber-secondary/70 bg-cyber-secondary/5 border border-cyber-secondary/20"
           >
             #{{ tag }}
           </span>
@@ -64,7 +64,7 @@ function formatDate(dateStr: string) {
 
 <style>
 .blog-content {
-  font-family: 'Inter', 'Space Grotesk', sans-serif;
+  font-family: 'Manrope', sans-serif;
   color: var(--cyber-text-dim);
   line-height: 1.85;
   font-size: 1.05rem;
@@ -75,9 +75,9 @@ function formatDate(dateStr: string) {
 .blog-content h2,
 .blog-content h3,
 .blog-content h4 {
-  font-family: 'Inter', 'Space Grotesk', sans-serif;
+  font-family: 'Archivo', sans-serif;
   color: var(--cyber-text);
-  font-weight: 700;
+  font-weight: 800;
   letter-spacing: -0.01em;
   line-height: 1.35;
 }
@@ -87,7 +87,7 @@ function formatDate(dateStr: string) {
   margin-top: 3rem;
   margin-bottom: 1rem;
   padding-bottom: 0.5rem;
-  border-bottom: 1px solid rgba(var(--cyber-accent-rgb), 0.1);
+  border-bottom: 2px solid var(--cyber-text);
   color: var(--cyber-accent);
 }
 
@@ -102,7 +102,7 @@ function formatDate(dateStr: string) {
   font-size: 1.1rem;
   margin-top: 1.75rem;
   margin-bottom: 0.5rem;
-  color: #9aa5ce;
+  color: var(--cyber-muted);
 }
 
 /* Paragraphs */
@@ -128,20 +128,20 @@ function formatDate(dateStr: string) {
 
 /* Inline code */
 .blog-content code {
-  font-family: 'Space Mono', monospace;
+  font-family: '"IBM Plex Mono"', monospace;
   font-size: 0.85em;
   color: var(--cyber-accent);
-  background: rgba(var(--cyber-accent-rgb), 0.08);
-  border: 1px solid rgba(var(--cyber-accent-rgb), 0.1);
+  background: var(--cyber-surface);
+  border: 1px solid rgba(var(--cyber-accent-rgb), 0.25);
   padding: 0.15em 0.4em;
-  border-radius: 4px;
+  border-radius: 0;
 }
 
-/* Code blocks */
+/* Code blocks — intentional dark panel against the light page */
 .blog-content pre {
-  background: #0a0a0f !important;
-  border: 1px solid rgba(var(--cyber-accent-rgb), 0.12);
-  border-radius: 8px;
+  background: var(--cyber-text) !important;
+  border: 2px solid var(--cyber-text);
+  border-radius: 0;
   padding: 1.25rem 1.5rem;
   margin: 1.5rem 0;
   overflow-x: auto;
@@ -154,7 +154,7 @@ function formatDate(dateStr: string) {
   border: none;
   padding: 0;
   font-size: inherit;
-  color: var(--cyber-text-dim);
+  color: #e5e1f5;
 }
 
 /* Lists */
@@ -185,23 +185,23 @@ function formatDate(dateStr: string) {
 
 /* Blockquotes */
 .blog-content blockquote {
-  border-left: 3px solid rgba(var(--cyber-accent-rgb), 0.3);
+  border-left: 3px solid var(--cyber-accent);
   padding: 0.75rem 1.25rem;
   margin: 1.5rem 0;
-  background: rgba(var(--cyber-accent-rgb), 0.03);
-  border-radius: 0 6px 6px 0;
+  background: var(--cyber-surface);
+  border-radius: 0;
 }
 
 .blog-content blockquote p {
-  color: #9aa5ce;
+  color: var(--cyber-muted);
   font-style: italic;
   margin-bottom: 0;
 }
 
 /* Images */
 .blog-content img {
-  border-radius: 8px;
-  border: 1px solid rgba(var(--cyber-accent-rgb), 0.1);
+  border-radius: 0;
+  border: 2px solid var(--cyber-text);
   margin: 1.5rem 0;
   max-width: 100%;
 }
@@ -222,6 +222,6 @@ function formatDate(dateStr: string) {
 
 /* Emphasis */
 .blog-content em {
-  color: #9aa5ce;
+  color: var(--cyber-muted);
 }
 </style>
