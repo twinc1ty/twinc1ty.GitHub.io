@@ -51,4 +51,12 @@
 .brand-mark:hover .brand-mark__rest {
   color: #0b0a0e;
 }
+
+/* Mobile: scroll away with the page instead of staying pinned and
+   overlapping content underneath. */
+@media (max-width: 640px) {
+  .brand-mark {
+    position: absolute;
+  }
+}
 </style>

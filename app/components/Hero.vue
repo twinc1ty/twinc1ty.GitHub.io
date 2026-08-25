@@ -25,7 +25,8 @@ onMounted(() => {
   <section id="hero" class="hero">
     <div class="hero__bg-type" aria-hidden="true">twinc1ty</div>
 
-    <div class="hero__grid grid grid-cols-1 min-[900px]:grid-cols-[1.4fr_1fr] gap-16 items-center max-w-[78rem] w-full mx-auto">
+    <div
+      class="hero__grid grid grid-cols-1 min-[900px]:grid-cols-[1.4fr_1fr] gap-16 items-center max-w-[78rem] w-full mx-auto">
       <div class="hero__copy">
         <p ref="eyebrowRef" class="hero__eyebrow">
           Computer Science Engineer, Senior SDE
@@ -37,8 +38,9 @@ onMounted(() => {
         </h1>
 
         <p ref="subRef" class="hero__sub">
-          Engineering, art, and literature — building things that hold up
-          under pressure, and read well long after.
+          Engineering, art, and literature - building things that hold up
+          under pressure and read well long after. <span class="text-sm italic text-gray-600">(occasionally, they don't
+            :p)</span>
         </p>
 
         <p ref="hintRef" class="hero__hint">
@@ -47,7 +49,7 @@ onMounted(() => {
 
         <div ref="statusRef" class="hero__status">
           <span class="hero__status-dot" />
-          Available for new work
+          Let's build something together!
         </div>
       </div>
 
@@ -180,8 +182,17 @@ onMounted(() => {
 }
 
 @keyframes hero-status-pulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.45; transform: scale(0.75); }
+
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.45;
+    transform: scale(0.75);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

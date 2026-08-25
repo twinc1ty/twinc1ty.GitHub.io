@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import gsap from 'gsap'
 
 interface KnobItem {
   label: string
@@ -20,9 +21,9 @@ const items: KnobItem[] = [
 const SEGMENT = 360 / items.length
 
 const rotation = ref(0)
-const spinning = ref(false)
 const collapsed = ref(true)
 const mobileBarRef = ref<HTMLElement>()
+const dialRef = ref<HTMLElement>()
 
 let barRO: ResizeObserver | null = null
 function publishBarHeight() {
@@ -109,10 +110,17 @@ watch(() => route.path, (path) => {
 let pendingNav: ReturnType<typeof setTimeout> | null = null
 
 function onDialClick() {
-  spinning.value = true
   rotation.value += SEGMENT
   playClick()
   settleNavigate()
+
+  if (dialRef.value) {
+    gsap.fromTo(
+      dialRef.value,
+      { scale: 0.86 },
+      { scale: 1, duration: 0.55, ease: 'elastic.out(1, 0.45)' },
+    )
+  }
 }
 
 function settleNavigate() {
@@ -163,6 +171,7 @@ onBeforeUnmount(() => {
         <div class="knob-nav__dial-wrap">
           <div class="knob-nav__bezel" />
           <button
+            ref="dialRef"
             type="button"
             class="knob-nav__dial"
             aria-label="Rotate to next section"
