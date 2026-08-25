@@ -185,4 +185,29 @@ onBeforeUnmount(() => {
     animation: none;
   }
 }
+
+@media (max-width: 640px) {
+  .now-playing,
+  .now-playing.is-compact {
+    gap: 0.45rem;
+  }
+
+  .now-playing__art,
+  .now-playing.is-compact .now-playing__art {
+    width: 1.6rem;
+    height: 1.6rem;
+  }
+
+  .now-playing__title {
+    font-size: 0.7rem;
+  }
+
+  .now-playing__artist {
+    font-size: 0.62rem;
+  }
+
+  .now-playing__eq {
+    height: 14px;
+  }
+}
 </style>

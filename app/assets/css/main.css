@@ -18,6 +18,17 @@
   --cyber-text-dim: #34313c;
   --cyber-subtle: #e1daf5;
   --footer-h: 45px;
+  --knob-bar-h: 0px;
+}
+
+.page-main {
+  padding-bottom: var(--footer-h);
+}
+
+@media (max-width: 640px) {
+  .page-main {
+    padding-bottom: calc(var(--footer-h) + var(--knob-bar-h));
+  }
 }
 
 @layer base {

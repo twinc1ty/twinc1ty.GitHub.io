@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
 interface KnobItem {
   label: string
@@ -21,6 +21,22 @@ const SEGMENT = 360 / items.length
 
 const rotation = ref(0)
 const spinning = ref(false)
+const collapsed = ref(true)
+const mobileBarRef = ref<HTMLElement>()
+
+let barRO: ResizeObserver | null = null
+function publishBarHeight() {
+  if (!mobileBarRef.value) return
+  const h = window.innerWidth <= 640 ? mobileBarRef.value.offsetHeight : 0
+  document.documentElement.style.setProperty('--knob-bar-h', `${h}px`)
+}
+
+onMounted(() => {
+  publishBarHeight()
+  barRO = new ResizeObserver(publishBarHeight)
+  if (mobileBarRef.value) barRO.observe(mobileBarRef.value)
+  window.addEventListener('resize', publishBarHeight)
+})
 
 let ac: AudioContext | null = null
 function playClick() {
@@ -111,6 +127,8 @@ function settleNavigate() {
 onBeforeUnmount(() => {
   if (pendingNav) clearTimeout(pendingNav)
   ac?.close()
+  barRO?.disconnect()
+  window.removeEventListener('resize', publishBarHeight)
 })
 </script>
 
@@ -123,38 +141,57 @@ onBeforeUnmount(() => {
 
     <span class="knob-plate__caption">Nav · Ch.01</span>
 
-    <div class="knob-nav">
-      <div class="knob-nav__dial-wrap">
-        <div class="knob-nav__bezel" />
-        <button
-          type="button"
-          class="knob-nav__dial"
-          aria-label="Rotate to next section"
-          @click="onDialClick"
-        >
-          <span class="knob-nav__ring">
-            <span class="knob-nav__ring2">
-              <span class="knob-nav__cap" />
-            </span>
-          </span>
-          <span class="knob-nav__face" :style="{ transform: `rotate(${rotation}deg)` }">
-            <span class="knob-nav__notch" />
-          </span>
-        </button>
-      </div>
+    <!-- Mobile-only collapsed bar: shows the active page, tap to expand -->
+    <button
+      ref="mobileBarRef"
+      type="button"
+      class="knob-plate__mobile-bar"
+      :aria-expanded="!collapsed"
+      @click="collapsed = !collapsed"
+    >
+      <span class="knob-plate__mobile-label">
+        <span class="knob-plate__mobile-index">{{ String(activeIndex + 1).padStart(2, '0') }}</span>
+        {{ items[activeIndex]!.label }}
+      </span>
+      <svg class="knob-plate__mobile-chevron" :class="{ 'is-open': !collapsed }" viewBox="0 0 12 8" width="12" height="8" fill="none">
+        <path d="M1 6.5L6 1.5L11 6.5" stroke="#0b0a0e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </button>
 
-      <div class="knob-nav__readout">
-        <div class="knob-nav__window">
-          <span class="knob-nav__window-index">{{ String(activeIndex + 1).padStart(2, '0') }}</span>
-          <Transition name="window-swap" mode="out-in">
-            <span :key="activeIndex" class="knob-nav__window-text">{{ items[activeIndex]!.short }}</span>
-          </Transition>
+    <div class="knob-plate__body" :class="{ 'is-collapsed': collapsed }">
+      <div class="knob-nav">
+        <div class="knob-nav__dial-wrap">
+          <div class="knob-nav__bezel" />
+          <button
+            type="button"
+            class="knob-nav__dial"
+            aria-label="Rotate to next section"
+            @click="onDialClick"
+          >
+            <span class="knob-nav__ring">
+              <span class="knob-nav__ring2">
+                <span class="knob-nav__cap" />
+              </span>
+            </span>
+            <span class="knob-nav__face" :style="{ transform: `rotate(${rotation}deg)` }">
+              <span class="knob-nav__notch" />
+            </span>
+          </button>
+        </div>
+
+        <div class="knob-nav__readout">
+          <div class="knob-nav__window">
+            <span class="knob-nav__window-index">{{ String(activeIndex + 1).padStart(2, '0') }}</span>
+            <Transition name="window-swap" mode="out-in">
+              <span :key="activeIndex" class="knob-nav__window-text">{{ items[activeIndex]!.short }}</span>
+            </Transition>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="knob-plate__divider" />
-    <NowPlaying :compact="compact" />
+      <div class="knob-plate__divider" />
+      <NowPlaying :compact="compact" />
+    </div>
   </div>
 </template>
 
@@ -201,6 +238,10 @@ onBeforeUnmount(() => {
   text-transform: uppercase;
   color: #5b21e0;
   opacity: 0.7;
+}
+
+.knob-plate__mobile-bar {
+  display: none;
 }
 
 .knob-nav {
@@ -360,5 +401,100 @@ onBeforeUnmount(() => {
 .window-swap-leave-to {
   opacity: 0;
   transform: translateY(-60%);
+}
+
+/* Mobile: a full-width collapsible bar docked above the footer, instead
+   of the floating desktop module. Collapsed by default, shows the active
+   page; tap to reveal the dial + now-playing. */
+@media (max-width: 640px) {
+  .knob-plate {
+    width: 100%;
+    box-sizing: border-box;
+    flex-direction: column;
+    gap: 0;
+    padding: 0;
+    border-left: none;
+    border-right: none;
+    border-bottom: none;
+    border-top: 1.5px solid #0b0a0e;
+  }
+
+  .knob-plate__screw,
+  .knob-plate__caption {
+    display: none;
+  }
+
+  .knob-plate__mobile-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0.85rem 1.1rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: '"IBM Plex Mono"', monospace;
+  }
+
+  .knob-plate__mobile-label {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #0b0a0e;
+  }
+
+  .knob-plate__mobile-index {
+    font-size: 0.65rem;
+    color: #5b21e0;
+  }
+
+  .knob-plate__mobile-chevron {
+    transition: transform 0.3s ease;
+  }
+
+  .knob-plate__mobile-chevron.is-open {
+    transform: rotate(180deg);
+  }
+
+  .knob-plate__body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    padding: 0 1.1rem 1rem;
+  }
+
+  .knob-plate__body.is-collapsed {
+    display: none;
+  }
+
+  .knob-nav {
+    gap: 1rem;
+  }
+
+  .knob-plate .knob-nav__dial-wrap,
+  .knob-plate.is-compact .knob-nav__dial-wrap {
+    width: 76px;
+    height: 76px;
+  }
+
+  .knob-plate .knob-nav__window,
+  .knob-plate.is-compact .knob-nav__window {
+    min-width: 6rem;
+    padding: 0.5rem 0.65rem;
+  }
+
+  .knob-plate .knob-nav__window-text,
+  .knob-plate.is-compact .knob-nav__window-text {
+    font-size: 0.82rem;
+  }
+
+  .knob-plate .knob-nav__window-index,
+  .knob-plate.is-compact .knob-nav__window-index {
+    font-size: 0.6rem;
+  }
 }
 </style>

@@ -18,7 +18,7 @@ function footerHeightPx() {
 }
 
 function recalc() {
-  if (!dockRef.value || isHome.value) return
+  if (!dockRef.value || isHome.value || window.innerWidth <= 640) return
   const rect = dockRef.value.getBoundingClientRect()
   awayTop.value = window.innerHeight - rect.height - footerHeightPx() - GAP_ABOVE_FOOTER
   awayLeft.value = window.innerWidth - rect.width - GAP_FROM_RIGHT
@@ -93,6 +93,21 @@ const style = computed(() => {
 @media (max-width: 480px) {
   .knob-dock.is-away {
     left: 1rem !important;
+  }
+}
+
+/* Mobile: full-width bar docked flush above the footer, same treatment
+   whether we're on the home screen or anywhere else. */
+@media (max-width: 640px) {
+  .knob-dock,
+  .knob-dock.is-home,
+  .knob-dock.is-away {
+    top: auto !important;
+    bottom: var(--footer-h) !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100%;
+    transform: none !important;
   }
 }
 </style>

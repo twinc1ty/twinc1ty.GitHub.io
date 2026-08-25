@@ -79,6 +79,12 @@ onMounted(() => {
   overflow: hidden;
 }
 
+@media (max-width: 640px) {
+  .hero {
+    min-height: calc(100vh - var(--footer-h) - var(--knob-bar-h));
+  }
+}
+
 .hero__bg-type {
   position: absolute;
   inset: 0;

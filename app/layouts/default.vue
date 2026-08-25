@@ -4,7 +4,7 @@
     <ClientOnly>
       <SiteKnobDock />
     </ClientOnly>
-    <main class="relative z-10" style="padding-bottom: var(--footer-h)">
+    <main class="relative z-10 page-main">
       <slot />
     </main>
     <Footer />
