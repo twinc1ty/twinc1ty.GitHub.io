@@ -1,8 +1,8 @@
 {
-  "isPlaying": false,
-  "title": "Aagaaz",
-  "artist": "Sartek",
-  "albumArt": "https://i.scdn.co/image/ab67616d0000b273c8f913a3069c6b43a7089c78",
-  "trackUrl": "https://open.spotify.com/track/0Q5802BFt7Dlu998TpJOd7",
-  "playedAt": "2026-08-30T10:40:08.119Z"
+  "isPlaying": true,
+  "title": "Low (feat. T-Pain)",
+  "artist": "Flo Rida, T-Pain",
+  "albumArt": "https://i.scdn.co/image/ab67616d0000b27349ebebcf0bd7042e5ef931be",
+  "trackUrl": "https://open.spotify.com/track/0CAfXk7DXMnon4gLudAp7J",
+  "playedAt": null
 }
