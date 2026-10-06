@@ -1,12 +1,15 @@
 name: Update Spotify Now Playing
 
 on:
+  # 4 times a day — the only cadence at which the "now playing" data
+  # (and therefore a fresh site deploy) gets refreshed.
   schedule:
-    - cron: '*/15 * * * *'
+    - cron: '0 0,6,12,18 * * *'
   workflow_dispatch:
 
 permissions:
   contents: write
+  actions: write
 
 concurrency:
   group: spotify-now-playing
@@ -30,6 +33,7 @@ jobs:
         run: node scripts/update-spotify.mjs
 
       - name: Commit spotify.json if it changed
+        id: commit
         run: |
           if ! git diff --quiet -- public/data/spotify.json; then
             git config user.name "github-actions[bot]"
@@ -37,6 +41,17 @@ jobs:
             git add public/data/spotify.json
             git commit -m "chore: update now playing"
             git push
+            echo "changed=true" >> "$GITHUB_OUTPUT"
           else
             echo "No change in spotify.json, skipping commit"
+            echo "changed=false" >> "$GITHUB_OUTPUT"
           fi
+
+      # A push made with the automatic GITHUB_TOKEN does NOT trigger other
+      # workflows (deploy.yml's `on: push` never fires). A workflow_dispatch
+      # is the sanctioned exception, so kick the deploy off explicitly.
+      - name: Trigger site deploy
+        if: steps.commit.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run deploy.yml --ref master

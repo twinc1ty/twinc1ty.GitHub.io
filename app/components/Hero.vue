@@ -2,7 +2,6 @@
 import { onMounted, ref } from 'vue'
 import gsap from 'gsap'
 
-const eyebrowRef = ref<HTMLElement>()
 const line1Ref = ref<HTMLElement>()
 const line2Ref = ref<HTMLElement>()
 const subRef = ref<HTMLElement>()
@@ -12,12 +11,11 @@ const statusRef = ref<HTMLElement>()
 onMounted(() => {
   const tl = gsap.timeline({ defaults: { ease: 'power3.out' } })
 
-  tl.from(eyebrowRef.value!, { opacity: 0, y: 16, duration: 0.5 })
-    .from(line1Ref.value!, { opacity: 0, y: 36, duration: 0.65 }, 0.42)
-    .from(line2Ref.value!, { opacity: 0, y: 36, duration: 0.65 }, 0.52)
-    .from(subRef.value!, { opacity: 0, y: 20, duration: 0.5 }, 0.68)
-    .from(hintRef.value!, { opacity: 0, duration: 0.4 }, 0.85)
-    .from(statusRef.value!, { opacity: 0, y: 12, duration: 0.45, clearProps: 'all' }, 0.95)
+  tl.from(line1Ref.value!, { opacity: 0, y: 36, duration: 0.65 })
+    .from(line2Ref.value!, { opacity: 0, y: 36, duration: 0.65 }, 0.1)
+    .from(subRef.value!, { opacity: 0, y: 20, duration: 0.5 }, 0.26)
+    .from(hintRef.value!, { opacity: 0, duration: 0.4 }, 0.43)
+    .from(statusRef.value!, { opacity: 0, y: 12, duration: 0.45, clearProps: 'all' }, 0.53)
 })
 </script>
 
@@ -28,10 +26,6 @@ onMounted(() => {
     <div
       class="hero__grid grid grid-cols-1 min-[900px]:grid-cols-[1.4fr_1fr] gap-16 items-center max-w-[78rem] w-full mx-auto">
       <div class="hero__copy">
-        <p ref="eyebrowRef" class="hero__eyebrow">
-          Computer Science Engineer, Senior SDE
-        </p>
-
         <h1 class="hero__name">
           <span ref="line1Ref" class="hero__line hero__line--ink">Anirudh</span>
           <span ref="line2Ref" class="hero__line hero__line--violet">Rath</span>
@@ -39,12 +33,8 @@ onMounted(() => {
 
         <p ref="subRef" class="hero__sub">
           Engineering, art, and literature - building things that hold up
-          under pressure and read well long after. <span class="text-sm italic text-gray-600">(occasionally, they don't
+          under pressure and read well long after. <span class="hero__aside text-sm italic text-gray-600">(occasionally, they don't
             :p)</span>
-        </p>
-
-        <p ref="hintRef" class="hero__hint">
-          Turn the dial to explore →
         </p>
 
         <div ref="statusRef" class="hero__status">
@@ -56,6 +46,10 @@ onMounted(() => {
       <!-- Reserved space — the site-wide knob (mounted in the layout) docks here on home -->
       <div class="hero__nav-spacer" aria-hidden="true" />
     </div>
+
+    <p ref="hintRef" class="hero__hint">
+      Turn the dial to explore →
+    </p>
   </section>
 </template>
 
@@ -75,6 +69,19 @@ onMounted(() => {
 @media (max-width: 640px) {
   .hero {
     min-height: calc(100vh - var(--footer-h) - var(--knob-bar-h));
+  }
+
+  /* Trim the hero down to its essentials on small screens — the aside
+     joke and the "turn the dial" hint are nice-to-haves, not load-bearing,
+     and the knob bar is already visible at the bottom so the hint is
+     redundant there. */
+  .hero__aside,
+  .hero__hint {
+    display: none;
+  }
+
+  .hero__sub {
+    margin-bottom: 1.25rem;
   }
 }
 
@@ -99,17 +106,6 @@ onMounted(() => {
 
 .hero__copy {
   position: relative;
-}
-
-.hero__eyebrow {
-  position: relative;
-  z-index: 1;
-  font-family: '"IBM Plex Mono"', monospace;
-  font-size: 0.75rem;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: #8a84a0;
-  margin-bottom: 1.25rem;
 }
 
 .hero__name {
@@ -147,14 +143,29 @@ onMounted(() => {
   margin-bottom: 2rem;
 }
 
+/* Anchored to the same coordinate the knob docks at (see SiteKnobDock.vue)
+   so this reads as a caption sitting just under the dial, not a stray
+   line in the text column on the other side of the page. */
 .hero__hint {
-  position: relative;
-  z-index: 1;
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  left: 80%;
+  transform: translate(-50%, 7.75rem);
   font-family: '"IBM Plex Mono"', monospace;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: #8a84a0;
+  white-space: nowrap;
+}
+
+@media (max-width: 900px) {
+  .hero__hint {
+    left: 50%;
+    top: 63%;
+    transform: translate(-50%, 6.5rem);
+  }
 }
 
 .hero__status {

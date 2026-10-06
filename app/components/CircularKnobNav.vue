@@ -154,6 +154,7 @@ onBeforeUnmount(() => {
       ref="mobileBarRef"
       type="button"
       class="knob-plate__mobile-bar"
+      :class="{ 'is-collapsed': collapsed }"
       :aria-expanded="!collapsed"
       @click="collapsed = !collapsed"
     >
@@ -167,6 +168,8 @@ onBeforeUnmount(() => {
     </button>
 
     <div class="knob-plate__body" :class="{ 'is-collapsed': collapsed }">
+      <p class="knob-plate__hint">Tap the dial to navigate →</p>
+
       <div class="knob-nav">
         <div class="knob-nav__dial-wrap">
           <div class="knob-nav__bezel" />
@@ -250,6 +253,10 @@ onBeforeUnmount(() => {
 }
 
 .knob-plate__mobile-bar {
+  display: none;
+}
+
+.knob-plate__hint {
   display: none;
 }
 
@@ -467,6 +474,40 @@ onBeforeUnmount(() => {
 
   .knob-plate__mobile-chevron.is-open {
     transform: rotate(180deg);
+  }
+
+  /* Fake-zoom attention cue so a first-time mobile visitor notices the
+     bar is tappable — a few gentle pulses, then it settles. */
+  .knob-plate__mobile-bar.is-collapsed {
+    animation: knob-bar-attract 1.7s ease-in-out 1.2s 3;
+  }
+
+  @keyframes knob-bar-attract {
+    0%, 100% {
+      transform: scale(1);
+      box-shadow: none;
+    }
+    50% {
+      transform: scale(1.025);
+      box-shadow: 0 0 0 4px rgba(91, 33, 224, 0.16);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .knob-plate__mobile-bar.is-collapsed {
+      animation: none;
+    }
+  }
+
+  .knob-plate__hint {
+    display: block;
+    text-align: left;
+    font-family: '"IBM Plex Mono"', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #8a84a0;
+    margin: -0.2rem 0 0.2rem;
   }
 
   .knob-plate__body {
